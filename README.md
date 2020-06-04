@@ -2,7 +2,7 @@
 
 Javascript SDKs to integrate with WSO2 Identity Server
 
-1. identity-auth-js - [README](identity-auth-js/README.md)
+- identity-auth-js - [README](identity-auth-js/README.md)
 
 ## License
 
