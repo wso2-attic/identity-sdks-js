@@ -20,7 +20,6 @@ import { handleSignIn } from "./actions/sign-in";
 import { handleSignOut } from "./actions/sign-out";
 import * as AUTHENTICATION_TYPES from "./constants";
 import { ConfigInterface } from "./models/client";
-import { ResponseModeTypes } from "./models/oidc-request-params";
 
 /**
  * The login scope.
@@ -63,7 +62,7 @@ const DefaultConfig = {
  * IdentityAuth class constructor.
  *
  * @export
- * @class IdentityAuth {Singelton}
+ * @class IdentityAuth {Singleton}
  * @implements {ConfigInterface} - Configuration interface.
  */
 export class IdentityAuth {

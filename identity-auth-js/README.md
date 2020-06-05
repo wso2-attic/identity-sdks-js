@@ -6,13 +6,9 @@ Provide OpenID Connect (OIDC) and OAuth2 protocol support for JavaScript client 
 
 ## Getting started
 
-### Build distrubution
-
 Run `yarn run build`
 
 > For development (watch mode) Run `yarn run watch`.
-
-## Usage
 
 ### 1. Initialize the client
 
@@ -93,7 +89,8 @@ authClient.signOut(() => {
 
 ---
 
-## Advance methods
+<!-- TODO: Refactor below content -->
+<!-- ## Advance methods
 
 #### OPConfigurationUtil.initOPConfiguration(wellKnownEndpoint, forceInit)
 
@@ -195,9 +192,7 @@ Sends the logout request the openid provider. Requires the redirect uri of the a
 
 #### AuthenticateSessionUtil.endAuthenticatedSession()
 
-Terminates the user session and clears the session attributes.
-
----
+Terminates the user session and clears the session attributes. -->
 
 ## License
 
