@@ -60,25 +60,25 @@ const DefaultConfig = {
 };
 
 /**
- * IdentityClient class constructor.
+ * IdentityAuth class constructor.
  *
  * @export
- * @class IdentityClient {Singelton}
+ * @class IdentityAuth {Singelton}
  * @implements {ConfigInterface} - Configuration interface.
  */
-export class IdentityClient {
+export class IdentityAuth {
 
     private static _userConfig;
-    private static _instance: IdentityClient = new IdentityClient(IdentityClient._userConfig);
+    private static _instance: IdentityAuth = new IdentityAuth(IdentityAuth._userConfig);
 
     constructor(UserConfig: ConfigInterface) {
-        IdentityClient._userConfig = { ...DefaultConfig, ...UserConfig };
+        IdentityAuth._userConfig = { ...DefaultConfig, ...UserConfig };
 
-        if (IdentityClient._instance){
-            return IdentityClient._instance;
+        if (IdentityAuth._instance){
+            return IdentityAuth._instance;
         }
 
-        IdentityClient._instance = this;
+        IdentityAuth._instance = this;
     }
 
     public getUserInfo() {
@@ -101,10 +101,10 @@ export class IdentityClient {
      *
      * @param {() => void} [callback] - Callback method to run on successfull sign-in
      * @returns {Promise<any>} promise.
-     * @memberof IdentityClient
+     * @memberof IdentityAuth
      */
     public async signIn(callback?: () => void): Promise<any> {
-        return handleSignIn(IdentityClient._userConfig, callback);
+        return handleSignIn(IdentityAuth._userConfig, callback);
     }
 
     /**
@@ -112,7 +112,7 @@ export class IdentityClient {
      *
      * @param {() => void} [callback] - Callback method to run on successfull sign-in
      * @returns {Promise<any>} promise.
-     * @memberof IdentityClient
+     * @memberof IdentityAuth
      */
     public async signOut(callback?: () => void): Promise<any> {
         return handleSignOut(callback);

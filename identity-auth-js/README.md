@@ -25,58 +25,61 @@ Minimal required configuration to initialize the client
 
 ```js
 /**
- * Initialize identityManager client
+ * E.g. Minimal Config
  */
-const identityManager = new IdentityClient({
-    callbackURL: "",
-    clientHost: "",
-    clientID: "",
-    serverOrigin: ""
-});
+const authConfig = {
+    callbackURL: "https://localhost:9000/myapp/home",
+    clientHost: "https://localhost:9000/",
+    clientID: "KwrHtf9iJdr6ewr0A9IYKIErR0rt",
+    serverOrigin: "https://localhost:9443/"
+};
+
+/**
+ * Initialize authClient
+ */
+const authClient = new IdentityAuth(authConfig);
 ```
 
 #### Configuration Properties
 
-| Config                             | Type    | Description |
-|---                                 |---      | --- |
-| **autherizationType** _(optional)_ | string  |  |
-| **callbackURL**                    | string  | Where to redirect upon successful authentication. (Note:- This should be configured in WSO2 Identity Server) E.g. https://mydomain.com/myapp/home |
-| **clientHost**                     | string  | Application origin address. With tenant path if has. E.g. https://mydomain.com/myapp or https://mydomain.com/t/exmaple.com/myapp |
-| **clientID**                       | string  | Application client-id generated in WSO2 Identity Server |
-| **clientSecret** _(optional)_      | string  | Application client-secret generated in WSO2 Identity Server |
-| **consentDenied** _(optional)_     | boolean |  |
-| **enablePKCE** _(optional)_        | boolean |  |
-| **prompt** _(optional)_            | string  |  |
-| **responseMode** _(optional)_      | string  | "query" or "form_post"  |
-| **scope** _(optional)_             | array   | { string array } |
-| **serverOrigin**                   | string  | WSO2 Identity Server address. E.g. https://is.mydomain.com |
-| **tenant** _(optional)_            | string  | Tenant name. (Note:- Leave it blank for super tenant) E.g. example.com |
-| **tenantPath** _(optional)_        | string  | Tenant Path. (Note:- Leave it blank for super tenant) E.g /t/example.com |
+| Config                             | Type    | Default                        | Description |
+|---                                 |---      | ---                            |---          |
+| **autherizationType** _(optional)_ | string  | "authorization_code"           |             |
+| **callbackURL**                    | string  | -                              | Where to redirect upon successful authentication. (Note:- This should be configured in WSO2 Identity Server) E.g. https://mydomain.com/myapp/home |
+| **clientHost**                     | string  | -                              | Application origin address. With tenant path if has. E.g. https://mydomain.com/myapp or https://mydomain.com/t/exmaple.com/myapp |
+| **clientID**                       | string  | -                              | OIDC Application clientID generated in WSO2 Identity Server |
+| **serverOrigin**                   | string  | -                              | WSO2 Identity Server address. E.g. https://is.mydomain.com |
+| **clientSecret** _(optional)_      | string  | -                              | OIDC Application clientSecret generated in WSO2 Identity Server |
+| **consentDenied** _(optional)_     | boolean | false                          |             |
+| **enablePKCE** _(optional)_        | boolean | true                           |             |
+| **prompt** _(optional)_            | string  | ""                             | "none", "login", "consent" |
+| **responseMode** _(optional)_      | string  | "query"                        | "query" or "form_post"  |
+| **scope** _(optional)_             | array   | [ "" ]                         |             |
+| **tenant** _(optional)_            | string  | "carbon.super"                 | Tenant name. (Note:- Leave it blank for super tenant) E.g. example.com |
+| **tenantPath** _(optional)_        | string  | ""                             | Tenant Path. (Note:- Leave it blank for super tenant) E.g. /t/example.com |
 
 ### 3. Methods
 
-#### SignIn()
+#### signIn( _callback_ )
 
 ```js
-identityManager.signIn(
-    () => {
-        // Callback method upon successful authnetication
-    })
-    .catch((error) => {
-        throw error;
-    });
+authClient.signIn(() => {
+    // Callback method trigger before signin redirection
+})
+.catch((error) => {
+    // Handle erorr
+});
 ```
 
-#### SignOut()
+#### signOut( _callback_ )
 
 ```js
-identityManager.signOut(
-    () => {
-        // Callback method upon logout
-    })
-    .catch((error) => {
-        throw error;
-    });
+authClient.signOut(() => {
+    // Callback method trigger before signout redirection
+})
+.catch((error) => {
+    // Handle erorr
+});
 ```
 
 ---
