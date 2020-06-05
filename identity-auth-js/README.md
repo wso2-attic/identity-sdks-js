@@ -2,6 +2,8 @@
 
 Provide OpenID Connect (OIDC) and OAuth2 protocol support for JavaScript client applications.
 
+---
+
 ## Getting started
 
 ### Build distrubution
@@ -19,44 +21,44 @@ Add following dependency in your package.json file.
 
 ### 2. Initialize client
 
-Minimal required configuration to initilize the client
+Minimal required configuration to initialize the client
 
 ```js
 /**
  * Initialize identityManager client
  */
-const identityManager = (() => {
-    let instance: ClientInteface;
-
-    const createInstance = () => {
-        return new IdentityClient({
-            callbackURL: "", // Where to redirect upon successful authentication. (Note:- This should be configured in WSO2 Identity Server) E.g. https://mydomain.com/myapp/home
-            clientHost: "", // Application origin address. With tenant path if has. E.g. https://mydomain.com/myapp or https://mydomain.com/t/exmaple.com/myapp
-            clientID: "", // Application client-id you get in WSO2 Identity Server
-            serverOrigin: "", // WSO2 Identity Server address. E.g. https://is.mydomain.com
-            tenant: "", // Tenant name. (Note:- Leave it blank for super tenant) E.g. example.com
-            tenantPath: "", // Tenant Path. (Note:- Leave it blank for super tenant) E.g /t/example.com
-        });
-    };
-
-    return {
-        getInstance: () => {
-            if (!instance) {
-                instance = createInstance();
-            }
-
-            return instance;
-        }
-    };
-})();
+const identityManager = new IdentityClient({
+    callbackURL: "",
+    clientHost: "",
+    clientID: "",
+    serverOrigin: ""
+});
 ```
 
-### 3. Client usage
+#### Configuration Properties
+
+| Config                             | Type    | Description |
+|---                                 |---      | --- |
+| **autherizationType** _(optional)_ | string  |  |
+| **callbackURL**                    | string  | Where to redirect upon successful authentication. (Note:- This should be configured in WSO2 Identity Server) E.g. https://mydomain.com/myapp/home |
+| **clientHost**                     | string  | Application origin address. With tenant path if has. E.g. https://mydomain.com/myapp or https://mydomain.com/t/exmaple.com/myapp |
+| **clientID**                       | string  | Application client-id generated in WSO2 Identity Server |
+| **clientSecret** _(optional)_      | string  | Application client-secret generated in WSO2 Identity Server |
+| **consentDenied** _(optional)_     | boolean |  |
+| **enablePKCE** _(optional)_        | boolean |  |
+| **prompt** _(optional)_            | string  |  |
+| **responseMode** _(optional)_      | string  | "query" or "form_post"  |
+| **scope** _(optional)_             | array   | { string array } |
+| **serverOrigin**                   | string  | WSO2 Identity Server address. E.g. https://is.mydomain.com |
+| **tenant** _(optional)_            | string  | Tenant name. (Note:- Leave it blank for super tenant) E.g. example.com |
+| **tenantPath** _(optional)_        | string  | Tenant Path. (Note:- Leave it blank for super tenant) E.g /t/example.com |
+
+### 3. Methods
 
 #### SignIn()
 
 ```js
-identityManager.getInstance().signIn(
+identityManager.signIn(
     () => {
         // Callback method upon successful authnetication
     })
@@ -68,7 +70,7 @@ identityManager.getInstance().signIn(
 #### SignOut()
 
 ```js
-identityManager.getInstance().signOut(
+identityManager.signOut(
     () => {
         // Callback method upon logout
     })
@@ -76,6 +78,8 @@ identityManager.getInstance().signOut(
         throw error;
     });
 ```
+
+---
 
 ## Advance methods
 
@@ -180,6 +184,8 @@ Sends the logout request the openid provider. Requires the redirect uri of the a
 #### AuthenticateSessionUtil.endAuthenticatedSession()
 
 Terminates the user session and clears the session attributes.
+
+---
 
 ## License
 
