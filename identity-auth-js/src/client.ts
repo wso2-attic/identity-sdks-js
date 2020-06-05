@@ -63,51 +63,22 @@ const DefaultConfig = {
  * IdentityClient class constructor.
  *
  * @export
- * @class IdentityClient
+ * @class IdentityClient {Singelton}
  * @implements {ConfigInterface} - Configuration interface.
  */
-export class IdentityClient implements ConfigInterface {
-    public autherizationType!: string;
-    public callbackURL: string;
-    public clientHost: string;
-    public clientID: string;
-    public clientSecret!: string;
-    public consentDenied!: boolean;
-    public enablePKCE!: boolean;
-    public responseMode!: ResponseModeTypes;
-    public scope!: string[];
-    public serverOrigin: string;
-    public tenant!: string;
-    public tenantPath!: string;
+export class IdentityClient {
+
+    private static _userConfig;
+    private static _instance: IdentityClient = new IdentityClient(IdentityClient._userConfig);
 
     constructor(UserConfig: ConfigInterface) {
-        const resolve = (propertyName) => {
-            if (Object.prototype.hasOwnProperty.call(UserConfig, propertyName)) {
-               return UserConfig[propertyName];
-            }
+        IdentityClient._userConfig = { ...DefaultConfig, ...UserConfig };
 
-            if (Object.prototype.hasOwnProperty.call(DefaultConfig, propertyName)) {
-                return DefaultConfig[propertyName];
-            }
+        if (IdentityClient._instance){
+            return IdentityClient._instance;
+        }
 
-            throw new Error("\"" + propertyName + "\"" +
-                " is missing in your initialize configuration. Please fill all the mandotary properties");
-        };
-
-        this.autherizationType = resolve("autherizationType");
-        this.callbackURL = resolve("callbackURL");
-        this.clientHost = resolve("clientHost");
-        this.clientID = resolve("clientID");
-        this.clientSecret = resolve("clientSecret");
-        this.consentDenied = resolve("consentDenied");
-        this.enablePKCE = resolve("enablePKCE");
-        this.responseMode = resolve("responseMode");
-        this.scope = resolve("scope");
-        this.serverOrigin = resolve("serverOrigin");
-        this.tenant = resolve("tenant");
-        this.tenantPath = resolve("tenantPath");
-
-        Object.assign(this, UserConfig);
+        IdentityClient._instance = this;
     }
 
     public getUserInfo() {
@@ -133,7 +104,7 @@ export class IdentityClient implements ConfigInterface {
      * @memberof IdentityClient
      */
     public async signIn(callback?: () => void): Promise<any> {
-        return handleSignIn(this, callback);
+        return handleSignIn(IdentityClient._userConfig, callback);
     }
 
     /**
