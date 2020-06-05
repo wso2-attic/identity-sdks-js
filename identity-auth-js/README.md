@@ -14,18 +14,17 @@ Run `yarn run build`
 
 ## Usage
 
-### 1. Import module
+### 1. Initialize the client
 
-Add following dependency in your package.json file.
-`"@wso2is/identity-auth-js": "^0.1.0"`
+Import the module
 
-### 2. Initialize client
-
-Minimal required configuration to initialize the client
+```js
+import { IdentityAuth } from "@wso2is/identity-auth-js";`
+```
 
 ```js
 /**
- * E.g. Minimal Config
+ * Minimal required configuration to initialize the client
  */
 const authConfig = {
     callbackURL: "https://localhost:9000/myapp/home",
@@ -40,25 +39,35 @@ const authConfig = {
 const authClient = new IdentityAuth(authConfig);
 ```
 
-#### Configuration Properties
+#### Configuration Options
 
-| Config                             | Type    | Default                        | Description |
-|---                                 |---      | ---                            |---          |
-| **autherizationType** _(optional)_ | string  | "authorization_code"           |             |
-| **callbackURL**                    | string  | -                              | Where to redirect upon successful authentication. (Note:- This should be configured in WSO2 Identity Server) E.g. https://mydomain.com/myapp/home |
-| **clientHost**                     | string  | -                              | Application origin address. With tenant path if has. E.g. https://mydomain.com/myapp or https://mydomain.com/t/exmaple.com/myapp |
-| **clientID**                       | string  | -                              | OIDC Application clientID generated in WSO2 Identity Server |
-| **serverOrigin**                   | string  | -                              | WSO2 Identity Server address. E.g. https://is.mydomain.com |
-| **clientSecret** _(optional)_      | string  | -                              | OIDC Application clientSecret generated in WSO2 Identity Server |
-| **consentDenied** _(optional)_     | boolean | false                          |             |
-| **enablePKCE** _(optional)_        | boolean | true                           |             |
-| **prompt** _(optional)_            | string  | ""                             | "none", "login", "consent" |
-| **responseMode** _(optional)_      | string  | "query"                        | "query" or "form_post"  |
-| **scope** _(optional)_             | array   | [ "" ]                         |             |
-| **tenant** _(optional)_            | string  | "carbon.super"                 | Tenant name. (Note:- Leave it blank for super tenant) E.g. example.com |
-| **tenantPath** _(optional)_        | string  | ""                             | Tenant Path. (Note:- Leave it blank for super tenant) E.g. /t/example.com |
+Required options
 
-### 3. Methods
+| Config           | Type    | Default | Description |
+|---               |---      | ---     |---          |
+| `callbackURL`  | string  | -       | Where to redirect upon successful authentication. (Note:- This should be configured in WSO2 Identity Server) E.g. https://mydomain.com/myapp/home |
+| `clientHost`   | string  | -       | Application origin address. With tenant path if has. E.g. https://mydomain.com/myapp or https://mydomain.com/t/exmaple.com/myapp |
+| `clientID`     | string  | -       | OIDC Application clientID generated in WSO2 Identity Server |
+| `serverOrigin` | string  | -       | WSO2 Identity Server address. E.g. https://is.mydomain.com |
+
+Optional configurations
+
+| Config                | Type    | Default        | Description |
+|---                    |---      | ---            |---          |
+| `autherizationType` | string  | "authorization_code"           |             |
+| `clientSecret`      | string  | -              | OIDC Application clientSecret generated in WSO2 Identity Server |
+| `consentDenied`     | boolean | false          |             |
+| `enablePKCE`        | boolean | true           |             |
+| `prompt`            | string  | ""             | "none", "login", "consent" |
+| `responseMode`      | string  | "query"        | "query" or "form_post"  |
+| `scope`             | array   | [ "" ]         |             |
+| `tenant`            | string  | "carbon.super" | Tenant name. (Note:- Leave it blank for super tenant) E.g. example.com |
+| `tenantPath`        | string  | ""             | Tenant Path. (Note:- Leave it blank for super tenant) E.g. /t/example.com |
+
+### 2. Methods (API Reference)
+
+* [signIn](#signin%20callback%20)
+* [signOut](#signout%20callback%20)
 
 #### signIn( _callback_ )
 
@@ -102,7 +111,7 @@ Sends the OAuth2 authorization code request to the IdP based on the provided req
 
 `requestParams` is type of `OIDCRequestParamsInterface`
 
-```js
+```typescript
 interface OIDCRequestParamsInterface {
     clientID: string;
     clientHost: string;
