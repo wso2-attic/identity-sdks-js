@@ -103,7 +103,7 @@ export class IdentityAuth {
      * @memberof IdentityAuth
      */
     public async signIn(callback?: () => void): Promise<any> {
-        return handleSignIn(IdentityAuth._userConfig, callback);
+        return await handleSignIn(IdentityAuth._userConfig, callback);
     }
 
     /**
@@ -114,6 +114,6 @@ export class IdentityAuth {
      * @memberof IdentityAuth
      */
     public async signOut(callback?: () => void): Promise<any> {
-        return handleSignOut(callback);
+        return await handleSignOut(IdentityAuth._userConfig, callback);
     }
 }

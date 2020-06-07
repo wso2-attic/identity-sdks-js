@@ -18,7 +18,8 @@
 
 import { getEndSessionEndpoint, resetOPConfiguration } from "./op-config";
 import { endAuthenticatedSession, getSessionParameter } from "./session";
-import { CALLBACK_URL, ID_TOKEN } from "../constants";
+import { ConfigInterface } from "../models/client";
+import { ID_TOKEN } from "../constants";
 
 /**
  * Execute user sign out request
@@ -28,7 +29,7 @@ import { CALLBACK_URL, ID_TOKEN } from "../constants";
  * @returns {Promise<any>} sign out request status
  */
 /* eslint-disable @typescript-eslint/no-explicit-any */
-export const sendSignOutRequest =  (callback?: () => void): Promise<any> => {
+export const sendSignOutRequest =  (requestParams: ConfigInterface, callback?: () => void): Promise<any> => {
     const logoutEndpoint = getEndSessionEndpoint();
 
     if (!logoutEndpoint || logoutEndpoint.trim().length === 0) {
@@ -41,10 +42,10 @@ export const sendSignOutRequest =  (callback?: () => void): Promise<any> => {
         return Promise.reject(new Error("Invalid id_token found in the session."));
     }
 
-    const callbackURL = getSessionParameter(CALLBACK_URL);
+    const loginCallbackURL = requestParams.logoutCallbackURL;
 
-    if (!callbackURL || callbackURL.trim().length === 0) {
-        return Promise.reject(new Error("No callback URL found in the session."));
+    if (!loginCallbackURL || loginCallbackURL.trim().length === 0) {
+        return Promise.reject(new Error("No logout callback URL found in the request."));
     }
 
     endAuthenticatedSession();
@@ -55,7 +56,7 @@ export const sendSignOutRequest =  (callback?: () => void): Promise<any> => {
     }
 
     window.location.href = `${logoutEndpoint}?` + `id_token_hint=${idToken}` +
-        `&post_logout_redirect_uri=${callbackURL}`;
+        `&post_logout_redirect_uri=${loginCallbackURL}`;
 };
 
 /**
@@ -66,11 +67,11 @@ export const sendSignOutRequest =  (callback?: () => void): Promise<any> => {
  * @returns {Promise<any>} sign out status
  */
 /* eslint-disable @typescript-eslint/no-explicit-any */
-export const handleSignOut = (callback?: () => void): Promise<any> => {
+export const handleSignOut = (requestParams: ConfigInterface, callback?: () => void): Promise<any> => {
     if (sessionStorage.length === 0) {
         return Promise.reject(new Error("No login sessions."));
     } else {
-        return sendSignOutRequest(callback)
+        return sendSignOutRequest(requestParams, callback)
             .catch((error) => {
                 // TODO: Handle error
                 throw error;

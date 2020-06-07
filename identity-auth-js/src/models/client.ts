@@ -23,12 +23,13 @@ import { ResponseModeTypes } from "./oidc-request-params";
  */
 export interface ConfigInterface {
     autherizationType?: string;
-    callbackURL: string;
     clientHost: string;
     clientID: string;
     clientSecret?: string;
     consentDenied?: boolean;
     enablePKCE?: boolean;
+    loginCallbackURL: string;
+    logoutCallbackURL: string;
     prompt?: string;
     responseMode?: ResponseModeTypes;
     scope?: string[];

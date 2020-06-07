@@ -20,7 +20,6 @@ import axios from "axios";
 import { getSessionParameter, removeSessionParameter, setSessionParameter } from "./session";
 import {
     AUTHORIZATION_ENDPOINT,
-    CALLBACK_URL,
     END_SESSION_ENDPOINT,
     ISSUER,
     JWKS_ENDPOINT,
@@ -95,13 +94,6 @@ export const setOPConfigInitiated = (): void => {
 };
 
 /**
- * Set callback URL.
- */
-export const setCallbackURL = (url: string): void => {
-    setSessionParameter(CALLBACK_URL, url);
-};
-
-/**
  * Set tenant name.
  */
 export const setTenant = (tenant: string): void => {
@@ -152,7 +144,6 @@ export const initOPConfiguration = (
                 .substring(0, response.data.token_endpoint.lastIndexOf("token")) + "revoke");
             setIssuer(response.data.issuer);
             setTenant(requestParams.tenant);
-            setCallbackURL(requestParams.callbackURL);
             setOPConfigInitiated();
 
             return Promise.resolve("Initialized OpenID Provider configuration from: "
@@ -165,7 +156,6 @@ export const initOPConfiguration = (
             setJwksUri(serverHost + SERVICE_RESOURCES.jwks);
             setIssuer(requestParams.serverOrigin + SERVICE_RESOURCES.token);
             setTenant(requestParams.tenant);
-            setCallbackURL(requestParams.callbackURL);
             setOPConfigInitiated();
 
             return Promise.resolve(new Error("Initialized OpenID Provider configuration from default configuration."
@@ -185,7 +175,6 @@ export const resetOPConfiguration = (): void => {
     removeSessionParameter(OP_CONFIG_INITIATED);
     removeSessionParameter(ISSUER);
     removeSessionParameter(TENANT);
-    removeSessionParameter(CALLBACK_URL);
 };
 
 /**

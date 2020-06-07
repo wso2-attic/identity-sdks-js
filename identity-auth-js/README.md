@@ -23,7 +23,8 @@ import { IdentityAuth } from "@wso2is/identity-auth-js";`
  * Minimal required configuration to initialize the client
  */
 const authConfig = {
-    callbackURL: "https://localhost:9000/myapp/home",
+    loginCallbackURL: "https://localhost:9000/myapp/home",
+    logoutCallbackURL: "https://localhost:9000/myapp/login",
     clientHost: "https://localhost:9000/",
     clientID: "KwrHtf9iJdr6ewr0A9IYKIErR0rt",
     serverOrigin: "https://localhost:9443/"
@@ -41,7 +42,8 @@ Required options
 
 | Config           | Type    | Default | Description |
 |---               |---      | ---     |---          |
-| `callbackURL`  | string  | -       | Where to redirect upon successful authentication. (Note:- This should be configured in WSO2 Identity Server) E.g. https://mydomain.com/myapp/home |
+| `loginCallbackURL`  | string  | -       | Where to redirect upon successful authentication. (Note:- This should be configured in WSO2 Identity Server) E.g. https://mydomain.com/myapp/home |
+| `logoutCallbackURL`  | string  | -       | Where to redirect after logout. (Note:- This should be configured in WSO2 Identity Server) E.g. https://mydomain.com/myapp/login |
 | `clientHost`   | string  | -       | Application origin address. With tenant path if has. E.g. https://mydomain.com/myapp or https://mydomain.com/t/exmaple.com/myapp |
 | `clientID`     | string  | -       | OIDC Application clientID generated in WSO2 Identity Server |
 | `serverOrigin` | string  | -       | WSO2 Identity Server address. E.g. https://is.mydomain.com |

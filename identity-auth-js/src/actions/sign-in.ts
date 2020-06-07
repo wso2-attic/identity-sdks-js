@@ -113,7 +113,7 @@ export const sendAuthorizationRequest = (requestParams: ConfigInterface): Promis
     }
 
     authorizeRequest += "&scope=" + scope;
-    authorizeRequest += "&redirect_uri=" + requestParams.callbackURL;
+    authorizeRequest += "&redirect_uri=" + requestParams.loginCallbackURL;
 
     if (requestParams.responseMode) {
         authorizeRequest += "&response_mode=" + requestParams.responseMode;
@@ -202,7 +202,7 @@ export const sendTokenRequest = (
     }
 
     body.push("grant_type=authorization_code");
-    body.push(`redirect_uri=${requestParams.callbackURL}`);
+    body.push(`redirect_uri=${requestParams.loginCallbackURL}`);
 
     if (requestParams.enablePKCE) {
         body.push(`code_verifier=${getSessionParameter(PKCE_CODE_VERIFIER)}`);
@@ -461,7 +461,7 @@ export const sendSignInRequest = (requestParams: ConfigInterface, callback?: () 
 export const handleSignIn = (requestParams: ConfigInterface, callback?: () => void): Promise<any> => {
     if (getSessionParameter(ACCESS_TOKEN)) {
         if (!isValidOPConfig(requestParams.tenant)) {
-            handleSignOut();
+            handleSignOut(requestParams);
         }
 
         if (callback) {
