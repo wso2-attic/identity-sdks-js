@@ -40,27 +40,27 @@ const authClient = new IdentityAuth(authConfig);
 
 Required options
 
-| Config           | Type    | Default | Description |
-|---               |---      | ---     |---          |
+| Config              | Type    | Default | Description |
+|---                  |---      | ---     |---          |
 | `loginCallbackURL`  | string  | -       | Where to redirect upon successful authentication. (Note:- This should be configured in WSO2 Identity Server) E.g. https://mydomain.com/myapp/home |
-| `logoutCallbackURL`  | string  | -       | Where to redirect after logout. (Note:- This should be configured in WSO2 Identity Server) E.g. https://mydomain.com/myapp/login |
-| `clientHost`   | string  | -       | Application origin address. With tenant path if has. E.g. https://mydomain.com/myapp or https://mydomain.com/t/exmaple.com/myapp |
-| `clientID`     | string  | -       | OIDC Application clientID generated in WSO2 Identity Server |
-| `serverOrigin` | string  | -       | WSO2 Identity Server address. E.g. https://is.mydomain.com |
+| `logoutCallbackURL` | string  | -       | Where to redirect after logout. (Note:- This should be configured in WSO2 Identity Server) E.g. https://mydomain.com/myapp/login |
+| `clientHost`        | string  | -       | Application origin address with tenant path if applicable . E.g. https://mydomain.com or https://mydomain.com/t/exmaple.com |
+| `clientID`          | string  | -       | OIDC Application clientID generated in WSO2 Identity Server |
+| `serverOrigin`      | string  | -       | WSO2 Identity Server address. E.g. https://is.mydomain.com |
 
 Optional configurations
 
-| Config                | Type    | Default        | Description |
-|---                    |---      | ---            |---          |
-| `autherizationType` | string  | "authorization_code"           |             |
-| `clientSecret`      | string  | -              | OIDC Application clientSecret generated in WSO2 Identity Server |
-| `consentDenied`     | boolean | false          |             |
-| `enablePKCE`        | boolean | true           |             |
-| `prompt`            | string  | ""             | "none", "login", "consent" |
-| `responseMode`      | string  | "query"        | "query" or "form_post"  |
-| `scope`             | array   | [ "" ]         |             |
-| `tenant`            | string  | "carbon.super" | Tenant name. (Note:- Leave it blank for super tenant) E.g. example.com |
-| `tenantPath`        | string  | ""             | Tenant Path. (Note:- Leave it blank for super tenant) E.g. /t/example.com |
+| Config              | Type    | Default               | Description |
+|---                  |---      | ---                   |---          |
+| `autherizationType` | string  | "authorization_code"  |             |
+| `clientSecret`      | string  | -                     | OIDC Application clientSecret generated in WSO2 Identity Server |
+| `consentDenied`     | boolean | false                 |             |
+| `enablePKCE`        | boolean | true                  |             |
+| `prompt`            | string  | ""                    | "none", "login", "consent" |
+| `responseMode`      | string  | "query"               | "query" or "form_post"  |
+| `scope`             | array   | [ "" ]                |             |
+| `tenant`            | string  | "carbon.super"        | Tenant name. (Note:- Leave it blank for super tenant) E.g. example.com |
+| `tenantPath`        | string  | ""                    | Tenant Path. (Note:- Leave it blank for super tenant) E.g. /t/example.com |
 
 ### 2. Methods (API Reference)
 
@@ -72,6 +72,9 @@ Optional configurations
 ```js
 authClient.signIn(() => {
     // Callback method trigger before signin redirection
+})
+.then((response) => {
+    // Response with basic user details upon logged in
 })
 .catch((error) => {
     // Handle erorr

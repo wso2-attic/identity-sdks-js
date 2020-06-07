@@ -32,6 +32,7 @@ import { handleSignOut } from "./sign-out";
 import {
     ACCESS_TOKEN,
     AUTHORIZATION_CODE,
+    ID_TOKEN,
     OIDC_SCOPE,
     PKCE_CODE_VERIFIER,
     REQUEST_PARAMS,
@@ -436,7 +437,7 @@ export const sendSignInRequest = (requestParams: ConfigInterface, callback?: () 
                     callback();
                 }
 
-                return Promise.resolve("Sign In successful!");
+                return Promise.resolve(getAuthenticatedUser(response.idToken));
             })
             .catch((error) => {
                 if (error.response && (error.response.status === 400)) {
@@ -459,7 +460,7 @@ export const sendSignInRequest = (requestParams: ConfigInterface, callback?: () 
  */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 export const handleSignIn = (requestParams: ConfigInterface, callback?: () => void): Promise<any> => {
-    if (getSessionParameter(ACCESS_TOKEN)) {
+    if (getSessionParameter(ACCESS_TOKEN) && getSessionParameter(ID_TOKEN)) {
         if (!isValidOPConfig(requestParams.tenant)) {
             handleSignOut(requestParams);
         }
@@ -468,11 +469,14 @@ export const handleSignIn = (requestParams: ConfigInterface, callback?: () => vo
             callback();
         }
 
-        return Promise.resolve("Sign In successful!");
+        return Promise.resolve(getAuthenticatedUser(getSessionParameter(ID_TOKEN)));
     } else {
         initOPConfiguration(requestParams, false)
             .then(() => {
-                sendSignInRequest(requestParams, callback);
+                sendSignInRequest(requestParams, callback)
+                    .then((response) => {
+                        Promise.resolve(response);
+                    });
             });
     }
 };
