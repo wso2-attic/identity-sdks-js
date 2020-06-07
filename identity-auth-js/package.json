@@ -20,7 +20,7 @@
         "compile": "run-script-os",
         "compile:win32": "tsc -p tsconfig.json",
         "compile:default": "tsc -p tsconfig.json",
-        "watch": "tsc *.ts --watch"
+        "watch": "tsc -p tsconfig.json -w"
     },
     "author": "WSO2",
     "license": "Apache-2.0",
@@ -29,6 +29,7 @@
     },
     "devDependencies": {
         "@types/crypto-js": "^3.1.47",
+        "@typescript-eslint/parser": "^3.1.0",
         "@types/node": "^14.0.10",
         "await-semaphore": "^0.1.3",
         "axios": "^0.19.2",
