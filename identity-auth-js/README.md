@@ -20,14 +20,14 @@ import { IdentityAuth } from "@wso2is/identity-auth-js";`
 
 ```js
 /**
- * Minimal required configuration to initialize the client
+ * Minimal required configuration sample to initialize the client
  */
 const authConfig = {
     loginCallbackURL: "https://localhost:9000/myapp/home",
     logoutCallbackURL: "https://localhost:9000/myapp/login",
-    clientHost: "https://localhost:9000/",
+    clientHost: "https://localhost:9000",
     clientID: "KwrHtf9iJdr6ewr0A9IYKIErR0rt",
-    serverOrigin: "https://localhost:9443/"
+    serverOrigin: "https://localhost:9443"
 };
 
 /**
