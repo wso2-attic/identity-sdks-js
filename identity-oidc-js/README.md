@@ -15,7 +15,7 @@ Run `yarn run build`
 Import the module
 
 ```js
-import { IdentityAuth } from "@wso2is/identity-auth-js";`
+import { IdentityAuth } from "@wso2is/identity-oidc-js";`
 ```
 
 ```js

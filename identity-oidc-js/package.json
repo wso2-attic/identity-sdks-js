@@ -1,5 +1,5 @@
 {
-    "name": "@wso2is/identity-auth-js",
+    "name": "@wso2is/identity-oidc-js",
     "version": "0.1.0",
     "description": "Authentication SDK for WSO2 Identity Server",
     "keywords": [
