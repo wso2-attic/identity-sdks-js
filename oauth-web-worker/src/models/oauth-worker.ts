@@ -16,7 +16,6 @@
  * under the License.
  */
 
-import { TokenResponseInterface } from "./token-response";
 import { SignInResponse } from "./message";
 import { AccountSwitchRequestParams } from ".";
 import { AxiosRequestConfig, AxiosResponse } from "axios";
