@@ -16,7 +16,16 @@
  * under the License.
  */
 
-import { INIT, SIGN_IN, SIGNED_IN, AUTH_REQUIRED, AUTH_CODE, LOGOUT, SWITCH_ACCOUNTS, API_CALL } from "../constants";
+import {
+	INIT,
+	SIGN_IN,
+	SIGNED_IN,
+	AUTH_REQUIRED,
+	AUTH_CODE,
+	LOGOUT,
+	API_CALL,
+	CUSTOM_GRANT,
+} from "../constants";
 
 export interface ResponseMessage<T> {
 	success: boolean;
@@ -35,7 +44,7 @@ export interface SignInResponse {
 	pkce?: string;
 }
 
-export interface AuthCode{
+export interface AuthCode {
 	code: string;
 	pkce?: string;
 }
@@ -45,5 +54,5 @@ export type MessageType =
 	| typeof SIGN_IN
 	| typeof AUTH_CODE
 	| typeof LOGOUT
-	| typeof SWITCH_ACCOUNTS
-	| typeof API_CALL;
+	| typeof API_CALL
+	| typeof CUSTOM_GRANT;
