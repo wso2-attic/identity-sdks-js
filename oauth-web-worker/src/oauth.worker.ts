@@ -27,6 +27,7 @@ import {
 	AccountSwitchRequestParams,
 	OAuthWorkerInterface,
 	OAuthWorkerSingletonInterface,
+	CustomGrantRequestParams,
 } from "./models";
 import {
 	INIT,
@@ -37,11 +38,12 @@ import {
 	AUTH_CODE,
 	API_CALL,
 	LOGOUT,
-	SWITCH_ACCOUNTS,
+	CUSTOM_GRANT,
 } from "./constants";
 import axios, { AxiosInstance, AxiosRequestConfig, AxiosResponse, AxiosError } from "axios";
 import { getJWKForTheIdToken, isValidIdToken, getCodeVerifier, getCodeChallenge } from "./utils";
-import { OIDC_SCOPE } from "./constants/token";
+import { OIDC_SCOPE, SCOPE } from "./constants/token";
+import { TOKEN_TAG, USERNAME_TAG, CLIENT_ID_TAG, CLIENT_SECRET_TAG, SCOPE_TAG } from "./constants/template-tags";
 
 const OAuthWorker: OAuthWorkerSingletonInterface = (function (): OAuthWorkerSingletonInterface {
 	/**
@@ -597,7 +599,7 @@ const OAuthWorker: OAuthWorkerSingletonInterface = (function (): OAuthWorkerSing
 
 	/**
 	 * Sends a sign in request.
-	 * 
+	 *
 	 * @returns {Promise<SignInResponse>} A promise that resolves with the Sign In response.
 	 */
 	const sendSignInRequest = (): Promise<SignInResponse> => {
@@ -633,7 +635,7 @@ const OAuthWorker: OAuthWorkerSingletonInterface = (function (): OAuthWorkerSing
 
 	/**
 	 * Refreshes the token.
-	 * 
+	 *
 	 * @returns {Promise<boolean>} A promise that resolves with `true` if refreshing is successful.
 	 */
 	const refreshAccessToken = (): Promise<boolean> => {
@@ -650,26 +652,8 @@ const OAuthWorker: OAuthWorkerSingletonInterface = (function (): OAuthWorkerSing
 	};
 
 	/**
-	 * Switches accounts.
-	 * 
-	 * @param {AccountSwitchRequestParams} requestParams Contains the username, userstore domain and tenant domain. 
-	 */
-	const switchAccount = (requestParams: AccountSwitchRequestParams): Promise<boolean> => {
-		return new Promise((resolve, reject) => {
-			sendAccountSwitchRequest(requestParams)
-				.then((response) => {
-					initUserSession(response, getAuthenticatedUser(response.idToken));
-					resolve(true);
-				})
-				.catch((error) => {
-					reject(error);
-				});
-		});
-	};
-
-	/**
 	 * Signs out.
-	 * 
+	 *
 	 * @returns {Promise<boolean>} A promise that resolves with `true` if sign out is successful.
 	 */
 	const signOut = (): Promise<boolean> => {
@@ -686,9 +670,9 @@ const OAuthWorker: OAuthWorkerSingletonInterface = (function (): OAuthWorkerSing
 
 	/**
 	 * Makes api calls.
-	 * 
+	 *
 	 * @param {AxiosRequestConfig} config API request data.
-	 * 
+	 *
 	 * @returns {AxiosResponse} A promise that resolves with the response.
 	 */
 	const httpRequest = (config: AxiosRequestConfig): Promise<AxiosResponse> => {
@@ -731,13 +715,113 @@ const OAuthWorker: OAuthWorkerSingletonInterface = (function (): OAuthWorkerSing
 	};
 
 	/**
+	 * Replaces template tags with actual values.
+	 *
+	 * @param {string} text Input string.
+	 * @param {string} scope Scope.
+	 *
+	 * @returns String with template tags replaced with actual values.
+	 */
+	const replaceTemplateTags = (text: string, scope: string): string => {
+		return text
+			.replace(TOKEN_TAG, token)
+			.replace(USERNAME_TAG, userName)
+			.replace(SCOPE_TAG, scope)
+			.replace(CLIENT_ID_TAG, clientID)
+			.replace(CLIENT_SECRET_TAG, clientSecret);
+	};
+
+	/**
+	 * Allows using custom grant types.
+	 *
+	 * @param {CustomGrantRequestParams} requestParams The request parameters.
+	 *
+	 * @returns {Promise<boolean|AxiosResponse>} A promise that resolves with a boolean value or the request response
+	 * if the the `returnResponse` attribute in the `requestParams` object is set to `true`.
+	 */
+	const customGrant = (requestParams: CustomGrantRequestParams): Promise<boolean | AxiosResponse> => {
+		if (!tokenEndpoint || tokenEndpoint.trim().length === 0) {
+			return Promise.reject(new Error("Invalid token endpoint found."));
+		}
+
+		let scope = OIDC_SCOPE;
+
+		if (requestedScope && requestedScope.length > 0) {
+			if (!requestedScope.includes(OIDC_SCOPE)) {
+				requestedScope.push(OIDC_SCOPE);
+			}
+			scope = requestedScope.join(" ");
+		}
+
+		let data: string = "";
+
+		Object.entries(requestParams.data).map(([key, value], index: number) => {
+			let newValue = replaceTemplateTags(value as string, scope);
+			data += `${key}=${newValue}${index !== Object.entries(requestParams.data).length - 1 ? "&" : ""}`;
+		});
+
+		const requestConfig: AxiosRequestConfig = {
+			url: tokenEndpoint,
+			headers: {
+				...getTokenRequestHeaders(clientHost),
+			},
+			data: data,
+			method: "POST",
+		};
+
+		if (requestParams.attachToken) {
+			requestConfig.headers = {
+				...requestConfig.headers,
+				Authorization: `Bearer ${token}`,
+			};
+		}
+
+		return axios(requestConfig)
+			.then(
+				(response: AxiosResponse): Promise<boolean | AxiosResponse> => {
+					if (response.status !== 200) {
+						return Promise.reject(
+							new Error("Invalid status code received in the token response: " + response.status)
+						);
+					}
+
+					if (requestParams.returnsSession) {
+						return validateIdToken(clientID, response.data.id_token, serverOrigin).then((valid) => {
+							if (valid) {
+								const tokenResponse: TokenResponseInterface = {
+									accessToken: response.data.access_token,
+									expiresIn: response.data.expires_in,
+									idToken: response.data.id_token,
+									refreshToken: response.data.refresh_token,
+									scope: response.data.scope,
+									tokenType: response.data.token_type,
+								};
+								initUserSession(tokenResponse, getAuthenticatedUser(tokenResponse.idToken));
+								return Promise.resolve(true);
+							}
+
+							return Promise.reject(
+								new Error("Invalid id_token in the token response: " + response.data.id_token)
+							);
+						});
+					} else {
+						return requestParams.returnResponse ? Promise.resolve(response) : Promise.resolve(true);
+					}
+				}
+			)
+			.catch((error: any) => {
+				return Promise.reject(error);
+			});
+	};
+
+	/**
 	 * @constructor
-	 * 
+	 *
 	 * Constructor function that returns an object containing all the public methods.
 	 *
 	 * @param {ConfigInterface} config Configuration data.
-	 * 
-	 * @returns {OAuthWorkerInterface} Returns the object containing 
+	 *
+	 * @returns {OAuthWorkerInterface} Returns the object containing
 	 */
 	function Constructor(config: ConfigInterface): OAuthWorkerInterface {
 		authorizationType = config.authorizationType;
@@ -783,9 +867,9 @@ const OAuthWorker: OAuthWorkerSingletonInterface = (function (): OAuthWorkerSing
 			generateAuthorizationCodeRequestURL,
 			sendSignInRequest,
 			refreshAccessToken,
-			switchAccount,
 			signOut,
 			httpRequest,
+			customGrant,
 		};
 	}
 
@@ -850,7 +934,7 @@ onmessage = ({ data, ports }: { data: { type: MessageType; data: any }; ports: r
 				port.postMessage({ success: false, error: "Worker has not been initiated." });
 				break;
 			}
-			
+
 			oAuthWorker.setAuthorizationCode(data.data.code);
 
 			if (data.data.pkce) {
@@ -929,28 +1013,25 @@ onmessage = ({ data, ports }: { data: { type: MessageType; data: any }; ports: r
 					});
 			}
 			break;
-		case SWITCH_ACCOUNTS:
+		case CUSTOM_GRANT:
 			if (!oAuthWorker) {
 				port.postMessage({ success: false, error: "Worker has not been initiated." });
 				break;
 			}
 
-			if (!oAuthWorker.isSignedIn()) {
+			if (!oAuthWorker.isSignedIn() && data.data.signInRequired) {
 				port.postMessage({ success: false, error: "You have not signed in yet." });
-			} else {
-				oAuthWorker
-					.switchAccount(data.data)
-					.then((response) => {
-						if (response) {
-							port.postMessage({ success: true, data: true });
-						} else {
-							port.postMessage({ success: false, error: `Received ${response}` });
-						}
-					})
-					.catch((error) => {
-						port.postMessage({ success: false, error: error });
-					});
+				break;
 			}
+
+			oAuthWorker
+				.customGrant(data.data)
+				.then((response) => {
+					port.postMessage({ success: true, data: response });
+				})
+				.catch((error) => {
+					port.postMessage({ success: false, error: error });
+				});
 			break;
 		default:
 			port.postMessage({ success: false, error: `Unknown message type ${data?.type}` });

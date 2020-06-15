@@ -20,11 +20,11 @@ import { Message, ResponseMessage, SignInResponse, AuthCode } from "./models/mes
 // @ts-ignore
 import WorkerFile from "./oauth.worker.ts";
 import { ConfigInterface } from "./models/client";
-import { INIT, SIGN_IN, SIGNED_IN, AUTH_CODE, LOGOUT, SWITCH_ACCOUNTS, API_CALL, AUTH_REQUIRED } from "./constants";
+import { INIT, SIGN_IN, SIGNED_IN, AUTH_CODE, LOGOUT, API_CALL, AUTH_REQUIRED, CUSTOM_GRANT } from "./constants";
 import { AUTHORIZATION_CODE, PKCE_CODE_VERIFIER } from "./constants/token";
 import { AccountSwitchRequestParams } from "./models";
 import { AxiosRequestConfig, AxiosResponse } from "axios";
-import { OAuthInterface, OAuthSingletonInterface } from "./models/oauth";
+import { OAuthInterface, OAuthSingletonInterface, CustomGrantRequestParams } from "./models/oauth";
 
 /**
  * This is a singleton class that allows authentication using the OAuth 2.0 protocol.
@@ -158,7 +158,7 @@ export const OAuth: OAuthSingletonInterface = (function (): OAuthSingletonInterf
 
 	/**
 	 * @constructor
-	 * 
+	 *
 	 * This returns the object containing the public methods.
 	 *
 	 * @returns {OAuthInterface} OAuthInterface object
@@ -366,33 +366,33 @@ export const OAuth: OAuthSingletonInterface = (function (): OAuthSingletonInterf
 			},
 
 			/**
-			 * Switches accounts.
+			 * Allows using custom grant types.
 			 *
-			 * @param {AccountSwitchRequestParams} requestParams Request parameters.
+			 * @param {CustomGrantRequestParams} requestParams Request Parameters.
 			 *
-			 * @returns {Promise<boolean>} A promise that resolves when account switching is successful.
-			 *
-			 * `requestParams` has the following attributes:
-			 *  - username: `string`
-			 *	- "userstore-domain": `string`
-			 *	- "tenant-domain": `string`
-			 *
+			 * @returns {Promise<AxiosResponse|boolean>} A promise that resolves with a boolean value or the request
+			 * response if the the `returnResponse` attribute in the `requestParams` object is set to `true`.
 			 */
-			switchAccounts: (requestParams: AccountSwitchRequestParams): Promise<boolean> => {
+			customGrant: (
+				requestParams: CustomGrantRequestParams
+			): Promise<typeof requestParams["returnResponse"] extends true ? AxiosResponse : boolean> => {
 				if (!initialized) {
 					return Promise.reject("The object has not been initialized yet");
 				}
 
-				if (!signedIn) {
+				if (!signedIn && requestParams.signInRequired) {
 					return Promise.reject("You have not signed in yet");
 				}
 
-				const message: Message<AccountSwitchRequestParams> = {
-					type: SWITCH_ACCOUNTS,
+				const message: Message<CustomGrantRequestParams> = {
+					type: CUSTOM_GRANT,
 					data: requestParams,
 				};
 
-				return communicate<AccountSwitchRequestParams, boolean>(message)
+				return communicate<
+					CustomGrantRequestParams,
+					typeof requestParams["returnResponse"] extends true ? AxiosResponse : boolean
+				>(message)
 					.then((response) => {
 						return Promise.resolve(response);
 					})
