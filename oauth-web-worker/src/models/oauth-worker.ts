@@ -20,6 +20,7 @@ import { SignInResponse } from "./message";
 import { AccountSwitchRequestParams } from ".";
 import { AxiosRequestConfig, AxiosResponse } from "axios";
 import { ConfigInterface } from "./client";
+import { CustomGrantRequestParams } from "./oauth";
 
 export interface OAuthWorkerInterface {
 	setIsOpConfigInitiated(status: boolean): void;
@@ -31,9 +32,9 @@ export interface OAuthWorkerInterface {
 	generateAuthorizationCodeRequestURL(): string;
 	sendSignInRequest(): Promise<SignInResponse>;
 	refreshAccessToken(): Promise<boolean>;
-	switchAccount(requestParams: AccountSwitchRequestParams): Promise<boolean>;
 	signOut(): Promise<boolean>;
 	httpRequest(config: AxiosRequestConfig): Promise<AxiosResponse>;
+	customGrant(requestParams: CustomGrantRequestParams): Promise<AxiosResponse | boolean>;
 }
 
 export interface OAuthWorkerSingletonInterface {

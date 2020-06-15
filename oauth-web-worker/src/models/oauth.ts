@@ -22,13 +22,21 @@ import { ConfigInterface } from ".";
 
 export interface OAuthInterface {
 	httpRequest(config: AxiosRequestConfig): Promise<AxiosResponse>;
-	switchAccounts(requestParams: AccountSwitchRequestParams): Promise<boolean>;
 	signOut(): Promise<boolean>;
 	signIn(): Promise<boolean>;
 	initialize(config: ConfigInterface): Promise<boolean>;
 	listenForAuthCode(): Promise<boolean>;
+	customGrant(requestParams: CustomGrantRequestParams): Promise<AxiosResponse | boolean>;
 }
 
 export interface OAuthSingletonInterface {
 	getInstance(): OAuthInterface;
+}
+
+export interface CustomGrantRequestParams {
+	data: any;
+	signInRequired: boolean;
+	attachToken: boolean;
+	returnsSession: boolean;
+	returnResponse: boolean;
 }
