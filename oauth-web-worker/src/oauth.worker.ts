@@ -60,8 +60,6 @@ const OAuthWorker: OAuthWorkerSingletonInterface = (function (): OAuthWorkerSing
 	let responseMode: ResponseModeTypes;
 	let requestedScope: string[];
 	let serverOrigin: string;
-	let tenant: string;
-	let tenantPath: string;
 	let baseUrls: string[];
 
 	/**
@@ -494,14 +492,13 @@ const OAuthWorker: OAuthWorkerSingletonInterface = (function (): OAuthWorkerSing
 		}
 
 		return axios
-			.get(serverOrigin + tenant + SERVICE_RESOURCES.wellKnown)
+			.get(serverOrigin + SERVICE_RESOURCES.wellKnown)
 			.then((response) => {
 				if (response.status !== 200) {
 					return Promise.reject(
 						new Error(
 							"Failed to load OpenID provider configuration from: " +
 								serverOrigin +
-								tenant +
 								SERVICE_RESOURCES.wellKnown
 						)
 					);
@@ -518,10 +515,7 @@ const OAuthWorker: OAuthWorkerSingletonInterface = (function (): OAuthWorkerSing
 				setIsOpConfigInitiated(true);
 
 				return Promise.resolve(
-					"Initialized OpenID Provider configuration from: " +
-						serverOrigin +
-						tenant +
-						SERVICE_RESOURCES.wellKnown
+					"Initialized OpenID Provider configuration from: " + serverOrigin + SERVICE_RESOURCES.wellKnown
 				);
 			})
 			.catch(() => {
@@ -529,9 +523,8 @@ const OAuthWorker: OAuthWorkerSingletonInterface = (function (): OAuthWorkerSing
 				tokenEndpoint = serverOrigin + SERVICE_RESOURCES.token;
 				revokeTokenEndpoint = serverOrigin + SERVICE_RESOURCES.revoke;
 				endSessionEndpoint = serverOrigin + SERVICE_RESOURCES.logout;
-				jwksUri = serverOrigin + tenant + SERVICE_RESOURCES.jwks;
+				jwksUri = serverOrigin + SERVICE_RESOURCES.jwks;
 				issuer = serverOrigin + SERVICE_RESOURCES.token;
-				tenant = tenant;
 				setIsOpConfigInitiated(true);
 
 				return Promise.resolve(
@@ -539,7 +532,6 @@ const OAuthWorker: OAuthWorkerSingletonInterface = (function (): OAuthWorkerSing
 						"Initialized OpenID Provider configuration from default configuration." +
 							"Because failed to access wellknown endpoint: " +
 							serverOrigin +
-							tenant +
 							SERVICE_RESOURCES.wellKnown
 					)
 				);
@@ -835,8 +827,6 @@ const OAuthWorker: OAuthWorkerSingletonInterface = (function (): OAuthWorkerSing
 		responseMode = config.responseMode;
 		requestedScope = config.scope;
 		serverOrigin = config.serverOrigin;
-		tenant = config.tenant ?? "";
-		tenantPath = config.tenantPath;
 		baseUrls = config.baseUrls;
 
 		httpClient = axios.create({

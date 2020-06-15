@@ -285,12 +285,6 @@ export const OAuth: OAuthSingletonInterface = (function (): OAuthSingletonInterf
 				if (typeof config.serverOrigin !== "string") {
 					return Promise.reject("serverOrigin must be a string");
 				}
-				if (config.tenant && typeof config.tenant !== "string") {
-					return Promise.reject("The tenant must be a string");
-				}
-				if (config.tenantPath && typeof config.tenantPath !== "string") {
-					return Promise.reject("The tenantPath must be a string");
-				}
 
 				const message: Message<ConfigInterface> = {
 					type: INIT,
