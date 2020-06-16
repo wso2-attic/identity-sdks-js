@@ -16,7 +16,7 @@
  * under the License.
  */
 
-import { Message, ResponseMessage, SignInResponse, AuthCode } from "./models/message";
+import { Message, ResponseMessage, SignInResponse, AuthCode, UserInfo } from "./models/message";
 // @ts-ignore
 import WorkerFile from "./oauth.worker.ts";
 import { ConfigInterface } from "./models/client";
@@ -147,7 +147,7 @@ export const OAuth: OAuthSingletonInterface = (function (): OAuthSingletonInterf
 		return new Promise((resolve, reject) => {
 			const timer = setTimeout(() => {
 				reject("Operation timed out");
-			}, timeout ?? 5000);
+			}, timeout ?? 10000);
 
 			return (channel.port1.onmessage = ({ data }: { data: ResponseMessage<R> }) => {
 				clearTimeout(timer);
@@ -170,9 +170,9 @@ export const OAuth: OAuthSingletonInterface = (function (): OAuthSingletonInterf
 			/**
 			 * Listens for the authorization code in the callback URL.
 			 * If present, this will continue with the authentication flow and resolve if successfully authenticated.
-			 * @returns {Promise<boolean>} Promise that resolves on successful authentication.
+			 * @returns {Promise<UserInfo>} Promise that resolves on successful authentication.
 			 */
-			listenForAuthCode: (): Promise<boolean> => {
+			listenForAuthCode: (): Promise<UserInfo> => {
 				if (!initialized) {
 					return Promise.reject(
 						"Error while listening to authorization code. The object has not been initialized yet."
@@ -196,7 +196,7 @@ export const OAuth: OAuthSingletonInterface = (function (): OAuthSingletonInterf
 						.then((response) => {
 							if (response.type === SIGNED_IN) {
 								signedIn = true;
-								return Promise.resolve(true);
+								return Promise.resolve(response.data);
 							}
 
 							return Promise.reject(
@@ -304,9 +304,9 @@ export const OAuth: OAuthSingletonInterface = (function (): OAuthSingletonInterf
 			/**
 			 * Initiates the authentication flow.
 			 *
-			 * @returns {Promise<boolean>} A promise that resolves when authentication is successful.
+			 * @returns {Promise<UserInfo>} A promise that resolves when authentication is successful.
 			 */
-			signIn: (): Promise<boolean> => {
+			signIn: (): Promise<UserInfo> => {
 				if (initialized) {
 					const message: Message<null> = {
 						type: SIGN_IN,
@@ -317,7 +317,7 @@ export const OAuth: OAuthSingletonInterface = (function (): OAuthSingletonInterf
 						.then((response) => {
 							if (response.type === SIGNED_IN) {
 								signedIn = true;
-								return Promise.resolve(true);
+								return Promise.resolve(response.data);
 							} else if (response.type === AUTH_REQUIRED && response.code) {
 								if (response.pkce) {
 									sessionStorage.setItem(PKCE_CODE_VERIFIER, response.pkce);

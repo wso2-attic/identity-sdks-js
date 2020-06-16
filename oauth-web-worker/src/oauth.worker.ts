@@ -28,6 +28,7 @@ import {
 	OAuthWorkerInterface,
 	OAuthWorkerSingletonInterface,
 	CustomGrantRequestParams,
+	UserInfo,
 } from "./models";
 import {
 	INIT,
@@ -538,7 +539,15 @@ const OAuthWorker: OAuthWorkerSingletonInterface = (function (): OAuthWorkerSing
 					} catch (error) {
 						throw Error(error);
 					}
-					return Promise.resolve({ type: SIGNED_IN } as SignInResponse);
+					return Promise.resolve({
+						type: SIGNED_IN,
+						data: {
+							email: email,
+							allowedScopes: allowedScope,
+							username: userName,
+							displayName: displayName,
+						},
+					} as SignInResponse);
 				})
 				.catch((error) => {
 					if (error.response && error.response.status === 400) {
@@ -742,6 +751,20 @@ const OAuthWorker: OAuthWorkerSingletonInterface = (function (): OAuthWorkerSing
 	};
 
 	/**
+	 * Returns email, username, display name and allowed scopes.
+	 *
+	 * @returns {UserInfo} User information.
+	 */
+	const getUserInfo = (): UserInfo => {
+		return {
+			email: email,
+			username: userName,
+			displayName: displayName,
+			allowedScopes: allowedScope,
+		};
+	};
+
+	/**
 	 * @constructor
 	 *
 	 * Constructor function that returns an object containing all the public methods.
@@ -795,6 +818,7 @@ const OAuthWorker: OAuthWorkerSingletonInterface = (function (): OAuthWorkerSing
 			signOut,
 			httpRequest,
 			customGrant,
+			getUserInfo,
 		};
 	}
 
@@ -828,7 +852,7 @@ onmessage = ({ data, ports }: { data: { type: MessageType; data: any }; ports: r
 			if (!oAuthWorker) {
 				port.postMessage({ success: false, error: "Worker has not been initiated." });
 			} else if (oAuthWorker.doesTokenExist()) {
-				port.postMessage({ success: true, data: { type: SIGNED_IN } });
+				port.postMessage({ success: true, data: { type: SIGNED_IN, data: oAuthWorker.getUserInfo() } });
 			} else {
 				oAuthWorker
 					.initOPConfiguration()
@@ -837,7 +861,7 @@ onmessage = ({ data, ports }: { data: { type: MessageType; data: any }; ports: r
 							.sendSignInRequest()
 							.then((response: SignInResponse) => {
 								if (response.type === SIGNED_IN) {
-									port.postMessage({ success: true, data: { type: SIGNED_IN } });
+									port.postMessage({ success: true, data: { type: SIGNED_IN, data: response.data } });
 								} else {
 									port.postMessage({
 										success: true,
@@ -872,7 +896,7 @@ onmessage = ({ data, ports }: { data: { type: MessageType; data: any }; ports: r
 						.sendSignInRequest()
 						.then((response: SignInResponse) => {
 							if (response.type === SIGNED_IN) {
-								port.postMessage({ success: true, data: { type: SIGNED_IN } });
+								port.postMessage({ success: true, data: { type: SIGNED_IN, data: response.data } });
 							} else {
 								port.postMessage({
 									success: true,

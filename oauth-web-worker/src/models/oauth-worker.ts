@@ -16,7 +16,7 @@
  * under the License.
  */
 
-import { SignInResponse } from "./message";
+import { SignInResponse, UserInfo } from "./message";
 import { AccountSwitchRequestParams } from ".";
 import { AxiosRequestConfig, AxiosResponse } from "axios";
 import { ConfigInterface } from "./client";
@@ -35,6 +35,7 @@ export interface OAuthWorkerInterface {
 	signOut(): Promise<boolean>;
 	httpRequest(config: AxiosRequestConfig): Promise<AxiosResponse>;
 	customGrant(requestParams: CustomGrantRequestParams): Promise<AxiosResponse | boolean>;
+	getUserInfo(): UserInfo;
 }
 
 export interface OAuthWorkerSingletonInterface {
