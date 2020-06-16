@@ -16,7 +16,7 @@
  * under the License.
  */
 
-import { INIT, SIGN_IN, SIGNED_IN, AUTH_REQUIRED, AUTH_CODE, LOGOUT, API_CALL, CUSTOM_GRANT } from "../constants";
+import { API_CALL, AUTH_CODE, AUTH_REQUIRED, CUSTOM_GRANT, INIT, LOGOUT, SIGNED_IN, SIGN_IN } from "../constants";
 
 export interface ResponseMessage<T> {
 	success: boolean;

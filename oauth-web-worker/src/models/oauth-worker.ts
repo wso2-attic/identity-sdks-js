@@ -16,10 +16,9 @@
  * under the License.
  */
 
-import { SignInResponse, UserInfo } from "./message";
-import { AccountSwitchRequestParams } from ".";
 import { AxiosRequestConfig, AxiosResponse } from "axios";
 import { ConfigInterface } from "./client";
+import { SignInResponse, UserInfo } from "./message";
 import { CustomGrantRequestParams } from "./oauth";
 
 export interface OAuthWorkerInterface {

@@ -86,7 +86,7 @@ export const getJWKForTheIdToken = (jwtHeader: string, keys: JWKInterface[]): Er
 			return KEYUTIL.getKey({
 				e: key.e,
 				kty: key.kty,
-				n: key.n,
+				n: key.n
 			});
 		}
 	}
@@ -117,9 +117,9 @@ export const isValidIdToken = (
 	username: string
 ): boolean => {
 	return KJUR.jws.JWS.verifyJWT(idToken, jwk, {
-		alg: getSupportedSignatureAlgorithms(),
-		aud: [clientID],
-		sub: [username],
-		iss: [issuer],
-	});
+        alg: getSupportedSignatureAlgorithms(),
+        aud: [clientID],
+        iss: [issuer],
+        sub: [username]
+    });
 };

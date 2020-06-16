@@ -17,9 +17,8 @@
  */
 
 import { AxiosRequestConfig, AxiosResponse } from "axios";
-import { AccountSwitchRequestParams } from "./oidc-request-params";
 import { ConfigInterface } from ".";
-import { UserInfo } from './message';
+import { UserInfo } from "./message";
 
 export interface OAuthInterface {
 	httpRequest(config: AxiosRequestConfig): Promise<AxiosResponse>;
