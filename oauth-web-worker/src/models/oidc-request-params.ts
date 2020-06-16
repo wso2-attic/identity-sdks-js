@@ -33,16 +33,6 @@ export interface OIDCRequestParamsInterface {
 }
 
 /**
- * Interface for the account switch grant
- * request parameters.
- */
-export interface AccountSwitchRequestParams {
-    username: string;
-    "userstore-domain": string;
-    "tenant-domain": string;
-}
-
-/**
  * Supported OAuth2 response types.
  */
 export type ResponseModeTypes = "query" | "form_post";
