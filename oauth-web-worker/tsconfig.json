@@ -16,7 +16,11 @@
 		"lib": ["es6", "dom","ES2017"],
 		"strictNullChecks": false,
 		"declarationDir": "dist/typings",
-		"declaration": true,
-		"allowSyntheticDefaultImports":true
+		"allowSyntheticDefaultImports":true,
+		"esModuleInterop": true,
+        "noImplicitAny": false,
+        "resolveJsonModule": true,
+        "noLib": false,
+		"suppressImplicitAnyIndexErrors": true,
 	}
 }

@@ -39,8 +39,7 @@ module.exports = {
 				],
 				"eol-last": "error",
 				"no-use-before-define": "off"
-			},
-			settings: {}
+			}
 		}
 	],
 	parserOptions: {
@@ -94,6 +93,5 @@ module.exports = {
 				natural: false
 			}
 		]
-	},
-	settings: {}
+	}
 };
