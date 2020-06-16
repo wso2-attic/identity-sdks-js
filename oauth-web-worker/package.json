@@ -1,5 +1,5 @@
 {
-  "name": "oauth-web-worker",
+  "name": "@wso2is/oauth-web-worker",
   "version": "0.0.1",
   "description": "OAuth authentication using web worker",
   "main": "index.js",
