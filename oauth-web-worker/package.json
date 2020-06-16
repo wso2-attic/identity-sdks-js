@@ -4,10 +4,10 @@
 	"description": "OAuth authentication using web worker",
 	"main": "dist/main.js",
 	"module": "dist/main.js",
-	"types":"dist/typings/src/index.d.ts",
+	"types": "dist/typings/src/index.d.ts",
 	"scripts": {
 		"test": "echo \"Error: no test specified\" && exit 1",
-		"build": "webpack -p --env.NODE_ENV=production"
+		"build": "rimraf dist; webpack -p --env.NODE_ENV=production"
 	},
 	"keywords": [
 		"oauth",
@@ -31,8 +31,9 @@
 		"eslint": "^7.2.0",
 		"eslint-loader": "^4.0.2",
 		"eslint-plugin-import": "^2.21.2",
-		"tslib": "^2.0.0",
+		"rimraf": "^3.0.2",
 		"ts-loader": "^7.0.5",
+		"tslib": "^2.0.0",
 		"typescript": "^3.9.3",
 		"webpack": "^4.43.0",
 		"webpack-cli": "^3.3.11",
