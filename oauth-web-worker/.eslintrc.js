@@ -40,11 +40,7 @@ module.exports = {
 				"eol-last": "error",
 				"no-use-before-define": "off"
 			},
-			settings: {
-				react: {
-					version: "detect"
-				}
-			}
+			settings: {}
 		}
 	],
 	parserOptions: {
@@ -99,9 +95,5 @@ module.exports = {
 			}
 		]
 	},
-	settings: {
-		react: {
-			version: "detect"
-		}
-	}
+	settings: {}
 };
