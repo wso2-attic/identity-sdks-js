@@ -468,8 +468,7 @@ export const OAuth: OAuthSingletonInterface = (function (): OAuthSingletonInterf
 			initialize,
 			listenForAuthCode,
 			signIn,
-			signOut,
-			worker
+			signOut
 		};
 	}
 
