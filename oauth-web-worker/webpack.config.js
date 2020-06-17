@@ -53,6 +53,7 @@ module.exports = {
 	},
 	output: {
 		filename: "main.js",
+		globalObject: "this",
 		library: "Wso2OAuth",
 		libraryTarget: "umd",
 		path: path.resolve(__dirname, "dist")
