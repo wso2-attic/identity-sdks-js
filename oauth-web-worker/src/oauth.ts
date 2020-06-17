@@ -40,7 +40,7 @@ import {
 	SignInResponse,
 	UserInfo
 } from "./models";
-import * as WorkerFile from "./oauth.worker";
+import WorkerFile from "./oauth.worker";
 
 /**
  * This is a singleton class that allows authentication using the OAuth 2.0 protocol.
@@ -460,7 +460,7 @@ export const OAuth: OAuthSingletonInterface = (function (): OAuthSingletonInterf
 	 * @returns {OAuthInterface} OAuthInterface object
 	 */
 	function Constructor(): OAuthInterface {
-		worker = new (WorkerFile as any)();
+		worker = new WorkerFile();
 
 		return {
 			customGrant,

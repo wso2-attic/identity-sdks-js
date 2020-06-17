@@ -1076,3 +1076,5 @@ ctx.onmessage = ({ data, ports }) => {
 			port.postMessage({ error: `Unknown message type ${data?.type}`, success: false });
 	}
 };
+
+export default {} as typeof Worker & { new(): Worker };
