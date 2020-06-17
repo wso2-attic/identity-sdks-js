@@ -98,7 +98,7 @@ const OAuthWorker: OAuthWorkerSingletonInterface = (function (): OAuthWorkerSing
 
 	let httpClient: AxiosInstance;
 
-	let refreshTimer: number;
+	let refreshTimer: NodeJS.Timeout;
 
 	let instance: OAuthWorkerInterface;
 
