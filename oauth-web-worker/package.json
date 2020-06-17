@@ -3,7 +3,7 @@
 	"version": "0.0.1",
 	"description": "OAuth authentication using web worker",
 	"main": "dist/main.js",
-	"module": "dist/main.js",
+	"module": "src/index.ts",
 	"types": "dist/typings/src/index.d.ts",
 	"scripts": {
 		"test": "echo \"Error: no test specified\" && exit 1",
@@ -18,7 +18,7 @@
 	],
 	"author": "WSO2",
 	"license": "Apache-2.0",
-	"dependencies": {
+	"peerDependencies": {
 		"axios": "^0.19.2",
 		"crypto-js": "^4.0.0",
 		"jsrsasign": "^8.0.16"
