@@ -38,7 +38,7 @@ import {
 	AuthenticatedUserInterface,
 	ConfigInterface,
 	CustomGrantRequestParams,
-	MessageType,
+	OAuthWorker as OAuthWorkerClass,
 	OAuthWorkerInterface,
 	OAuthWorkerSingletonInterface,
 	ResponseModeTypes,
@@ -48,6 +48,8 @@ import {
 	UserInfo
 } from "./models";
 import { getCodeChallenge, getCodeVerifier, getJWKForTheIdToken, isValidIdToken } from "./utils";
+
+const ctx: OAuthWorkerClass<any> = self as any;
 
 const OAuthWorker: OAuthWorkerSingletonInterface = (function (): OAuthWorkerSingletonInterface {
 	/**
@@ -841,7 +843,7 @@ const OAuthWorker: OAuthWorkerSingletonInterface = (function (): OAuthWorkerSing
 
 let oAuthWorker: OAuthWorkerInterface;
 
-onmessage = ({ data, ports }: { data: { type: MessageType; data: any }; ports: readonly MessagePort[] }) => {
+ctx.onmessage = ({ data, ports }) => {
 	const port = ports[0];
 
 	switch (data.type) {
