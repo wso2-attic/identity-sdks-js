@@ -17,7 +17,6 @@
  */
 
 import { AxiosRequestConfig, AxiosResponse } from "axios";
-import WorkerFile from "worker-loader!./oauth.worker.ts";
 import {
 	API_CALL,
 	AUTHORIZATION_CODE,
@@ -41,6 +40,7 @@ import {
 	SignInResponse,
 	UserInfo
 } from "./models";
+import * as WorkerFile from "./oauth.worker";
 
 /**
  * This is a singleton class that allows authentication using the OAuth 2.0 protocol.
@@ -460,7 +460,7 @@ export const OAuth: OAuthSingletonInterface = (function (): OAuthSingletonInterf
 	 * @returns {OAuthInterface} OAuthInterface object
 	 */
 	function Constructor(): OAuthInterface {
-		worker = new WorkerFile();
+		worker = new (WorkerFile as any)();
 
 		return {
 			customGrant,
@@ -468,7 +468,8 @@ export const OAuth: OAuthSingletonInterface = (function (): OAuthSingletonInterf
 			initialize,
 			listenForAuthCode,
 			signIn,
-			signOut
+			signOut,
+			worker
 		};
 	}
 
