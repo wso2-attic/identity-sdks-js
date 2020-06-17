@@ -18,7 +18,7 @@
 
 import { AxiosRequestConfig, AxiosResponse } from "axios";
 import { ConfigInterface } from "./client";
-import { SignInResponse, UserInfo } from "./message";
+import { Message, SignInResponse, UserInfo } from "./message";
 import { CustomGrantRequestParams } from "./oauth";
 
 export interface OAuthWorkerInterface {
@@ -39,4 +39,12 @@ export interface OAuthWorkerInterface {
 
 export interface OAuthWorkerSingletonInterface {
 	getInstance(config: ConfigInterface): OAuthWorkerInterface;
+}
+
+interface OAuthEvent<T> extends MessageEvent {
+	data: Message<T>;
+}
+
+export class OAuthWorker<T> extends Worker {
+	public onmessage: (this: OAuthWorker<T>, event: OAuthEvent<T>) => void;
 }
