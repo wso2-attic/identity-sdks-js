@@ -416,6 +416,8 @@ export const OAuth: OAuthSingletonInterface = (function (): OAuthSingletonInterf
 							}
 
 							location.href = response.code;
+				
+							return Promise.reject("Redirecting to get authorization code...");
 						} else {
 							return Promise.reject("Something went wrong during authentication");
 						}
