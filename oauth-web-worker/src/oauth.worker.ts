@@ -27,6 +27,7 @@ import {
 	INIT,
 	LOGOUT,
 	OIDC_SCOPE,
+	REVOKE_TOKEN,
 	SCOPE_TAG,
 	SERVICE_RESOURCES,
 	SIGNED_IN,
@@ -164,7 +165,6 @@ const OAuthWorker: OAuthWorkerSingletonInterface = (function (): OAuthWorkerSing
 	 *
 	 * @returns {Promise<any>} A promise that resolves when signing out is successful.
 	 */
-	// eslint-disable-next-line @typescript-eslint/no-unused-vars
 	const sendRevokeTokenRequest = (): Promise<any> => {
 		if (!revokeTokenEndpoint || revokeTokenEndpoint.trim().length === 0) {
 			return Promise.reject("Invalid revoke token endpoint found.");
@@ -650,11 +650,28 @@ const OAuthWorker: OAuthWorkerSingletonInterface = (function (): OAuthWorkerSing
 	 * @returns {Promise<boolean>} A promise that resolves with `true` if sign out is successful.
 	 */
 	const signOut = (): Promise<string> => {
-		return sendSignOutRequest().then((response) => {
-			return Promise.resolve(response);
-		}).catch(error => {
-			return Promise.reject(error);
-		})
+		return sendSignOutRequest()
+			.then((response) => {
+				return Promise.resolve(response);
+			})
+			.catch((error) => {
+				return Promise.reject(error);
+			});
+	};
+
+	/**
+	 * Revokes the token.
+	 *
+	 * @returns {Promise<boolean>} A promise that resolves with `true` if revoking is successful.
+	 */
+	const revokeToken = (): Promise<boolean> => {
+		return sendRevokeTokenRequest()
+			.then((response) => {
+				return Promise.resolve(response);
+			})
+			.catch((error) => {
+				return Promise.reject(error);
+			});
 	};
 
 	/**
@@ -885,6 +902,7 @@ const OAuthWorker: OAuthWorkerSingletonInterface = (function (): OAuthWorkerSing
 			initOPConfiguration,
 			isSignedIn,
 			refreshAccessToken,
+			revokeToken,
 			sendSignInRequest,
 			setAuthorizationCode,
 			setIsOpConfigInitiated,
@@ -1147,6 +1165,40 @@ ctx.onmessage = ({ data, ports }) => {
 					});
 				});
 
+			break;
+		case REVOKE_TOKEN:
+			if (!oAuthWorker) {
+				port.postMessage({
+					error: "Worker has not been initiated.",
+					success: false
+				});
+
+				break;
+			}
+
+			if (!oAuthWorker.isSignedIn() && data.data.signInRequired) {
+				port.postMessage({
+					error: "You have not signed in yet.",
+					success: false
+				});
+
+				break;
+			}
+
+			oAuthWorker
+				.revokeToken()
+				.then((response) => {
+					port.postMessage({
+						data: response,
+						success: true
+					});
+				})
+				.catch((error) => {
+					port.postMessage({
+						error: error,
+						success: false
+					});
+				});
 			break;
 		default:
 			port.postMessage({ error: `Unknown message type ${data?.type}`, success: false });

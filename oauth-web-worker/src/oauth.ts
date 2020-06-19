@@ -27,7 +27,8 @@ import {
 	LOGOUT,
 	PKCE_CODE_VERIFIER,
 	SIGNED_IN,
-	SIGN_IN
+	SIGN_IN,
+	REVOKE_TOKEN
 } from "./constants";
 import {
 	AuthCode,
@@ -127,7 +128,7 @@ export const OAuth: OAuthSingletonInterface = (function (): OAuthSingletonInterf
 	 */
 	const removeAuthorizationCode = (): string => {
 		const url = location.href;
-		
+
 		return url.replace(/\?code=.*$/, "");
 	};
 
@@ -426,7 +427,7 @@ export const OAuth: OAuthSingletonInterface = (function (): OAuthSingletonInterf
 							}
 
 							location.href = response.code;
-				
+
 							return Promise.reject("Redirecting to get authorization code...");
 						} else {
 							return Promise.reject("Something went wrong during authentication");
@@ -468,6 +469,29 @@ export const OAuth: OAuthSingletonInterface = (function (): OAuthSingletonInterf
 	};
 
 	/**
+	 * Revokes token.
+	 *
+	 * @returns {Promise<boolean>} A promise that resolves when revoking is completed.
+	 */
+	const revokeToken = (): Promise<boolean> => {
+		if (!signedIn) {
+			return Promise.reject("You have not signed in yet");
+		}
+
+		const message: Message<null> = {
+			type: REVOKE_TOKEN
+		};
+
+		return communicate<null, boolean>(message)
+			.then((response) => {
+				return Promise.resolve(response);
+			})
+			.catch((error) => {
+				return Promise.reject(error);
+			});
+	};
+
+	/**
 	 * @constructor
 	 *
 	 * This returns the object containing the public methods.
@@ -482,6 +506,7 @@ export const OAuth: OAuthSingletonInterface = (function (): OAuthSingletonInterf
 			httpRequest,
 			initialize,
 			listenForAuthCode,
+			revokeToken,
 			signIn,
 			signOut
 		};
