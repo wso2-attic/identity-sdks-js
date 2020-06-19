@@ -35,6 +35,7 @@ export interface OAuthWorkerInterface {
 	httpRequest(config: AxiosRequestConfig): Promise<AxiosResponse>;
 	customGrant(requestParams: CustomGrantRequestParams): Promise<AxiosResponse | boolean | SignInResponse>;
 	getUserInfo(): UserInfo;
+	revokeToken(): Promise<boolean>;
 }
 
 export interface OAuthWorkerSingletonInterface {
