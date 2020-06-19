@@ -26,9 +26,9 @@ import {
 	INIT,
 	LOGOUT,
 	PKCE_CODE_VERIFIER,
+	REVOKE_TOKEN,
 	SIGNED_IN,
-	SIGN_IN,
-	REVOKE_TOKEN
+	SIGN_IN
 } from "./constants";
 import {
 	AuthCode,
@@ -55,6 +55,7 @@ import WorkerFile from "./oauth.worker";
  * 		callback URL.
  * 	2. Kick off the authentication flow by calling the `signIn()` method.
  *
+ * @example
  * Example:
  *
  * ```
