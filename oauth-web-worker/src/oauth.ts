@@ -455,11 +455,12 @@ export const OAuth: OAuthSingletonInterface = (function (): OAuthSingletonInterf
 			type: LOGOUT
 		};
 
-		return communicate<null, boolean>(message)
+		return communicate<null, string>(message)
 			.then((response) => {
 				signedIn = false;
+				window.location.href = response;
 
-				return Promise.resolve(response);
+				return Promise.resolve(true);
 			})
 			.catch((error) => {
 				return Promise.reject(error);
