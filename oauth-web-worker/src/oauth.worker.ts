@@ -164,6 +164,7 @@ const OAuthWorker: OAuthWorkerSingletonInterface = (function (): OAuthWorkerSing
 	 *
 	 * @returns {Promise<any>} A promise that resolves when signing out is successful.
 	 */
+	// eslint-disable-next-line @typescript-eslint/no-unused-vars
 	const sendRevokeTokenRequest = (): Promise<any> => {
 		if (!revokeTokenEndpoint || revokeTokenEndpoint.trim().length === 0) {
 			return Promise.reject("Invalid revoke token endpoint found.");
@@ -325,6 +326,22 @@ const OAuthWorker: OAuthWorkerSingletonInterface = (function (): OAuthWorkerSing
 	/**
 	 * @private
 	 *
+	 * Destroys OP configurations.
+	 */
+	const destroyOPConfiguration = (): void => {
+		authorizeEndpoint = null;
+		tokenEndpoint = null;
+		endSessionEndpoint = null;
+		jwksUri = null;
+		revokeTokenEndpoint = null;
+		isOpConfigInitiated = false;
+		issuer = null;
+		callbackURL = null;
+	};
+
+	/**
+	 * @private
+	 *
 	 * Requests the `token` endpoint for an access token.
 	 *
 	 * @returns {Promise<TokenResponseInterface>} A promise that resolves with the token response.
@@ -383,6 +400,34 @@ const OAuthWorker: OAuthWorkerSingletonInterface = (function (): OAuthWorkerSing
 			.catch((error) => {
 				return Promise.reject(error.response);
 			});
+	};
+
+	/**
+	 * @private
+	 *
+	 * Execute user sign out request
+	 *
+	 * @returns {Promise<string>} sign out request status
+	 */
+	const sendSignOutRequest = (): Promise<string> => {
+		const logoutEndpoint = endSessionEndpoint;
+
+		if (!logoutEndpoint || logoutEndpoint.trim().length === 0) {
+			return Promise.reject(new Error("No logout endpoint found in the session."));
+		}
+
+		if (!idToken || idToken.trim().length === 0) {
+			return Promise.reject(new Error("Invalid id_token found in the session."));
+		}
+
+		if (!callbackURL || callbackURL.trim().length === 0) {
+			return Promise.reject(new Error("No callback URL found in the session."));
+		}
+
+		destroyUserSession();
+		destroyOPConfiguration();
+
+		Promise.resolve(`${logoutEndpoint}?` + `id_token_hint=${idToken}` + `&post_logout_redirect_uri=${callbackURL}`);
 	};
 
 	/**
@@ -604,16 +649,12 @@ const OAuthWorker: OAuthWorkerSingletonInterface = (function (): OAuthWorkerSing
 	 *
 	 * @returns {Promise<boolean>} A promise that resolves with `true` if sign out is successful.
 	 */
-	const signOut = (): Promise<boolean> => {
-		return new Promise((resolve, reject) => {
-			sendRevokeTokenRequest()
-				.then(() => {
-					resolve(true);
-				})
-				.catch((error) => {
-					reject(error);
-				});
-		});
+	const signOut = (): Promise<string> => {
+		return sendSignOutRequest().then((response) => {
+			return Promise.resolve(response);
+		}).catch(error => {
+			return Promise.reject(error);
+		})
 	};
 
 	/**
@@ -1058,7 +1099,7 @@ ctx.onmessage = ({ data, ports }) => {
 							});
 						} else {
 							port.postMessage({
-								error: `Received ${response}`,
+								error: "Received no response",
 								success: false
 							});
 						}
