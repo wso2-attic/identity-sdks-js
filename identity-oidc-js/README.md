@@ -1,6 +1,6 @@
-# WSO2 Identity Server - Authentication SDK for Javascript Applications
+# WSO2 Identity Server - OIDC Authentication SDK for Javascript Applications
 
-Provide OpenID Connect (OIDC) and OAuth2 protocol support for JavaScript client applications.
+Provide OpenID Connect (OIDC) and OAuth2 protocol support for JavaScript/Typescript client applications.
 
 ---
 
@@ -15,7 +15,7 @@ Run `yarn run build`
 Import the module
 
 ```js
-import { IdentityAuth } from "@wso2is/identity-oidc-js";`
+import { IdentityAuth } from "@wso2/identity-oidc-js";`
 ```
 
 ```js

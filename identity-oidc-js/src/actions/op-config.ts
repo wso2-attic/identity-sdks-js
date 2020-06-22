@@ -124,7 +124,7 @@ export const initOPConfiguration = (
     ): Promise<any> => {
 
     if (!forceInit && isValidOPConfig(requestParams.tenant)) {
-        return Promise.resolve();
+        return Promise.resolve("OP config is already initiated");
     }
 
     const serverHost = requestParams.serverOrigin + requestParams.tenantPath;
