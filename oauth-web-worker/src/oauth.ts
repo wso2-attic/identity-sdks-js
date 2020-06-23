@@ -245,11 +245,12 @@ export const OAuth: OAuthSingletonInterface = (function (): OAuthSingletonInterf
 
     /**
      *
-     * Send the API request to the web worker and returns the response.
+     * Send multiple API requests to the web worker and returns the response.
+     * Similar `axios.spread` in functionality.
      *
-     * @param {AxiosRequestConfig} config The Axios Request Config object
+     * @param {AxiosRequestConfig[]} config The Axios Request Config object
      *
-     * @returns {Promise<AxiosResponse>} A promise that resolves with the response data.
+     * @returns {Promise<AxiosResponse>[]} A promise that resolves with the response data.
      */
     const httpRequestAll = <T = any>(configs: AxiosRequestConfig[]): Promise<AxiosResponse<T>[]> => {
         if (!initialized) {

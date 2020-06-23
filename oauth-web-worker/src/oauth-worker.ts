@@ -721,11 +721,11 @@ export const OAuthWorker: OAuthWorkerSingletonInterface = (function (): OAuthWor
 	};
 
 	/**
-	 * Makes api calls.
+	 * Makes multiple api calls. Wraps `axios.spread`.
 	 *
-	 * @param {AxiosRequestConfig} config API request data.
+	 * @param {AxiosRequestConfig[]} config API request data.
 	 *
-	 * @returns {AxiosResponse} A promise that resolves with the response.
+	 * @returns {AxiosResponse[]} A promise that resolves with the response.
 	 */
 	const httpRequestAll = (configs: AxiosRequestConfig[]): Promise<AxiosResponse[]> => {
 		let matches = false;
