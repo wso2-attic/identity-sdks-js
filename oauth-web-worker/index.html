@@ -1,104 +1,104 @@
 <!DOCTYPE html>
 <html lang="en">
-	<head>
-		<meta charset="UTF-8" />
-		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-		<title>Document</title>
-		<script src="main.js"></script>
-		<script>
-			var oAuth = Wso2OAuth.OAuth.getInstance();
-			oAuth
-				.initialize({
-					clientHost: "https://localhost:9443/worker",
-					clientID: "70gph7I55ioGi5FqhLPz8JvxZCEa",
-					serverOrigin: "https://localhost:9443",
-					baseUrls: ["https://localhost:9443"],
-					origin: origin,
-					callbackURL: "https://localhost:9443/worker",
-					enablePKCE: true,
-					scope: ["SYSTEM", "openid"]
-				})
-				.then((response) => {
-					console.log(response);
-					oAuth
-						.listenForAuthCode()
-						.then((response) => console.log(response))
-						.catch((error) => console.log(error));
-				})
-				.catch((error) => {
-					console.log(error);
-				});
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Document</title>
+        <script src="main.js"></script>
+        <script>
+            var oAuth = Wso2OAuth.OAuth.getInstance();
+            oAuth
+                .initialize({
+                    clientHost: "https://localhost:9443/worker",
+                    clientID: "70gph7I55ioGi5FqhLPz8JvxZCEa",
+                    serverOrigin: "https://localhost:9443",
+                    baseUrls: ["https://localhost:9443"],
+                    origin: origin,
+                    callbackURL: "https://localhost:9443/worker",
+                    enablePKCE: true,
+                    scope: ["SYSTEM", "openid"]
+                })
+                .then((response) => {
+                    console.log(response);
+                    oAuth
+                        .listenForAuthCode()
+                        .then((response) => console.log(response))
+                        .catch((error) => console.log(error));
+                })
+                .catch((error) => {
+                    console.log(error);
+                });
 
-			function switchAcc() {
-				oAuth
-					.customGrant({
-						data: {
-							grant_type: "account_switch",
-							username: "user",
-							"userstore-domain": "PRIMARY",
-							"tenant-domain": "carbon.super",
-							token: "{{token}}",
-							scope: "{{scope}}",
-							client_id: "{{clientId}}"
-						},
-						signInRequired: true,
-						attachToken: false,
-						returnsSession: true,
-						returnResponse: false
-					})
-					.then((response) => {
-						console.log(response);
-					})
-					.catch((error) => {
-						console.log(error);
-					});
-			}
+            function switchAcc() {
+                oAuth
+                    .customGrant({
+                        data: {
+                            grant_type: "account_switch",
+                            username: "user",
+                            "userstore-domain": "PRIMARY",
+                            "tenant-domain": "carbon.super",
+                            token: "{{token}}",
+                            scope: "{{scope}}",
+                            client_id: "{{clientId}}"
+                        },
+                        signInRequired: true,
+                        attachToken: false,
+                        returnsSession: true,
+                        returnResponse: false
+                    })
+                    .then((response) => {
+                        console.log(response);
+                    })
+                    .catch((error) => {
+                        console.log(error);
+                    });
+            }
 
-			function logout() {
-				oAuth
-					.signOut()
-					.then((response) => {
-						console.log(response);
-					})
-					.catch((error) => console.log(error));
-			}
+            function logout() {
+                oAuth
+                    .signOut()
+                    .then((response) => {
+                        console.log(response);
+                    })
+                    .catch((error) => console.log(error));
+            }
 
-			function testAPI() {
-				const requestConfig = {
-					headers: {
-						"Access-Control-Allow-Origin": origin,
-						"Content-Type": "application/json"
-					},
-					method: "GET",
-					url: "https://localhost:9443/scim2/Me"
-				};
+            function testAPI() {
+                const requestConfig = {
+                    headers: {
+                        "Access-Control-Allow-Origin": origin,
+                        "Content-Type": "application/json"
+                    },
+                    method: "GET",
+                    url: "https://localhost:9443/scim2/Me"
+                };
 
-				oAuth
-					.httpRequest(requestConfig)
-					.then((response) => {
-						console.log(response);
-					})
-					.catch((error) => {
-						console.log(error);
-					});
-			}
+                oAuth
+                    .httpRequest(requestConfig)
+                    .then((response) => {
+                        console.log(response);
+                    })
+                    .catch((error) => {
+                        console.log(error);
+                    });
+            }
 
-			function signIn() {
-				oAuth
-					.signIn()
-					.then((response) => {
-						console.log(response);
-					})
-					.catch((error) => {
-						console.error(error);
-					});
-			}
-		</script>
-	</head>
-	<body>
-		<button onclick="signIn()">Sign In!</button>
-		<button onclick="switchAcc()">Switch!</button>
-		<button onclick="testAPI()">Test API!</button>
-		<button onclick="logout()">Logout!</button>
-	</body>
+            function signIn() {
+                oAuth
+                    .signIn()
+                    .then((response) => {
+                        console.log(response);
+                    })
+                    .catch((error) => {
+                        console.error(error);
+                    });
+            }
+        </script>
+    </head>
+    <body>
+        <button onclick="signIn()">Sign In!</button>
+        <button onclick="switchAcc()">Switch!</button>
+        <button onclick="testAPI()">Test API!</button>
+        <button onclick="logout()">Logout!</button>
+    </body>
 </html>
