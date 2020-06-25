@@ -123,14 +123,13 @@ To make multiple api calls at once (this is similar to `axios.all` or `Promise.a
 ```javascript
 const headers = {
     Accept: "application/json",
-    "Access-Control-Allow-Origin": store.getState().config.deployment.clientHost
 };
 
 const getQuestions = (): any => {
     return {
         headers,
         method: HttpMethods.GET,
-        url: store.getState().config.endpoints.challenges
+        url: "https://localhost:9443/api/get-challenges"
     };
 };
 
@@ -138,7 +137,7 @@ const getAnswers = (): any => {
     return {
         headers,
         method: HttpMethods.GET,
-        url: store.getState().config.endpoints.challengeAnswers
+        url: "https://localhost:9443/api/get-answers"
     };
 };
 
@@ -174,7 +173,7 @@ oAuth
     });
 ```
 
-The `customGrant()` methods takes a config object that has the following attributes as the argument.
+The `customGrant()` methods takes a config object as the argument that has the following attribute.
 
 ```typescript
 export interface CustomGrantRequestParams {
@@ -185,3 +184,11 @@ export interface CustomGrantRequestParams {
     returnResponse: boolean; //If set to true, the response will be returned to the user
 }
 ```
+If the data attribute of the config object needs to pass authentication credentials such as the access token as an attribute, then a placeholder value can be used. The web worker will replace the placeholder with the actual value before sending the request. The following placeholders can be used:
+|Credential|Placeholder|
+:-:|:-:|
+|Access token| `"{{token}}"`|
+|Username|`"{{username}}"`|
+|Scope|`"{{scope}}"`|
+|Client ID|`"{{clientId}}"`|
+|Client Secret|`"{{clientSecret}}"`|
