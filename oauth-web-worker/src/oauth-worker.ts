@@ -150,7 +150,7 @@ export const OAuthWorker: OAuthWorkerSingletonInterface = (function (): OAuthWor
 				});
 			})
 			.catch((error) => {
-				return Promise.reject(error.response);
+				return Promise.reject(error);
 			});
 	};
 
@@ -187,7 +187,7 @@ export const OAuthWorker: OAuthWorkerSingletonInterface = (function (): OAuthWor
 				return Promise.resolve(response);
 			})
 			.catch((error) => {
-				return Promise.reject(error.response);
+				return Promise.reject(error);
 			});
 	};
 
@@ -243,7 +243,7 @@ export const OAuthWorker: OAuthWorkerSingletonInterface = (function (): OAuthWor
 				return Promise.resolve(validity);
 			})
 			.catch((error) => {
-				return Promise.reject(error.response);
+				return Promise.reject(error);
 			});
 	};
 
@@ -394,7 +394,7 @@ export const OAuthWorker: OAuthWorkerSingletonInterface = (function (): OAuthWor
 				});
 			})
 			.catch((error) => {
-				return Promise.reject(error.response);
+				return Promise.reject(error);
 			});
 	};
 
