@@ -55,7 +55,8 @@ const DefaultConfig = {
     enablePKCE: true,
     responseMode: null,
     scope: [LOGIN_SCOPE, HUMAN_TASK_SCOPE],
-    tenant: DEFAULT_SUPER_TENANT
+    tenant: DEFAULT_SUPER_TENANT,
+    tenantPath: ""
 };
 
 /**
@@ -102,8 +103,8 @@ export class IdentityAuth {
      * @returns {Promise<any>} promise.
      * @memberof IdentityAuth
      */
-    public async signIn(callback?: () => void): Promise<any> {
-        return await handleSignIn(IdentityAuth._userConfig, callback);
+    public signIn(callback?: () => void): Promise<any> {
+        return handleSignIn(IdentityAuth._userConfig, callback);
     }
 
     /**
@@ -113,7 +114,7 @@ export class IdentityAuth {
      * @returns {Promise<any>} promise.
      * @memberof IdentityAuth
      */
-    public async signOut(callback?: () => void): Promise<any> {
-        return await handleSignOut(IdentityAuth._userConfig, callback);
+    public signOut(callback?: () => void): Promise<any> {
+        return handleSignOut(IdentityAuth._userConfig, callback);
     }
 }

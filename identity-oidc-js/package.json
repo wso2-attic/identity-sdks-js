@@ -1,5 +1,5 @@
 {
-    "name": "@wso2is/identity-auth-js",
+    "name": "@wso2/identity-oidc-js",
     "version": "0.1.0",
     "description": "Authentication SDK for WSO2 Identity Server",
     "keywords": [
@@ -15,27 +15,28 @@
     "main": "dist/index.js",
     "types": "dist/index.d.ts",
     "scripts": {
-        "build": "npm run clean && npm run compile",
+        "build": "yarn run clean && yarn run compile",
         "clean": "rimraf ./dist",
-        "compile": "run-script-os",
-        "compile:win32": "tsc -p tsconfig.json",
-        "compile:default": "tsc -p tsconfig.json",
+        "compile": "tsc -p tsconfig.json",
         "watch": "tsc -p tsconfig.json -w"
     },
     "author": "WSO2",
     "license": "Apache-2.0",
     "dependencies": {
+        "await-semaphore": "^0.1.3",
+        "axios": "^0.19.2",
+        "crypto-js": "^4.0.0",
         "jsrsasign": "^8.0.16"
     },
     "devDependencies": {
         "@types/crypto-js": "^3.1.47",
-        "@typescript-eslint/parser": "^3.1.0",
         "@types/node": "^14.0.10",
-        "await-semaphore": "^0.1.3",
-        "axios": "^0.19.2",
-        "crypto-js": "^4.0.0",
+        "@typescript-eslint/parser": "^3.1.0",
+        "expose-loader": "^0.7.5",
         "rimraf": "^3.0.2",
-        "run-script-os": "^1.1.1",
-        "typescript": "^3.9.3"
+        "ts-loader": "^7.0.5",
+        "typescript": "^3.9.3",
+        "webpack": "^4.43.0",
+        "webpack-cli": "^3.3.11"
     }
 }

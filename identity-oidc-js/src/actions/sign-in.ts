@@ -462,7 +462,7 @@ export const sendSignInRequest = (requestParams: ConfigInterface, callback?: () 
 export const handleSignIn = (requestParams: ConfigInterface, callback?: () => void): Promise<any> => {
     if (getSessionParameter(ACCESS_TOKEN) && getSessionParameter(ID_TOKEN)) {
         if (!isValidOPConfig(requestParams.tenant)) {
-            handleSignOut(requestParams);
+            return handleSignOut(requestParams);
         }
 
         if (callback) {
@@ -471,12 +471,14 @@ export const handleSignIn = (requestParams: ConfigInterface, callback?: () => vo
 
         return Promise.resolve(getAuthenticatedUser(getSessionParameter(ID_TOKEN)));
     } else {
-        initOPConfiguration(requestParams, false)
+        return initOPConfiguration(requestParams, false)
             .then(() => {
-                sendSignInRequest(requestParams, callback)
+                return sendSignInRequest(requestParams, callback)
                     .then((response) => {
-                        Promise.resolve(response);
+                        return Promise.resolve(response);
                     });
+            }).catch((error) => {
+                return Promise.reject(error);
             });
     }
 };
