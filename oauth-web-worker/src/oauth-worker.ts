@@ -75,6 +75,7 @@ export const OAuthWorker: OAuthWorkerSingletonInterface = (function (): OAuthWor
 	let tokenEndpoint: string;
 	// eslint-disable-next-line @typescript-eslint/no-unused-vars
 	let endSessionEndpoint: string;
+	let check_session_iframe: string;
 	let jwksUri: string;
 	let revokeTokenEndpoint: string;
 	let issuer: string;
@@ -502,6 +503,7 @@ export const OAuthWorker: OAuthWorkerSingletonInterface = (function (): OAuthWor
 					response.data.token_endpoint.substring(0, response.data.token_endpoint.lastIndexOf("token")) +
 					"revoke";
 				issuer = response.data.issuer;
+				check_session_iframe = response.data.check_session_iframe;
 				setIsOpConfigInitiated(true);
 
 				return Promise.resolve(
@@ -516,6 +518,7 @@ export const OAuthWorker: OAuthWorkerSingletonInterface = (function (): OAuthWor
 				endSessionEndpoint = serverOrigin + SERVICE_RESOURCES.logout;
 				jwksUri = serverOrigin + SERVICE_RESOURCES.jwks;
 				issuer = serverOrigin + SERVICE_RESOURCES.token;
+				check_session_iframe = serverOrigin + SERVICE_RESOURCES.oidcSessionIFrame;
 				setIsOpConfigInitiated(true);
 
 				return Promise.resolve(
@@ -601,6 +604,7 @@ export const OAuthWorker: OAuthWorkerSingletonInterface = (function (): OAuthWor
 							authorizationEndpoint: authorizeEndpoint,
 							displayName: displayName,
 							email: email,
+							oidcSessionIframe: check_session_iframe,
 							username: userName
 						},
 						type: SIGNED_IN
@@ -867,6 +871,7 @@ export const OAuthWorker: OAuthWorkerSingletonInterface = (function (): OAuthWor
 											authorizationEndpoint: authorizeEndpoint,
 											displayName: displayName,
 											email: email,
+											oidcSessionIframe: check_session_iframe,
 											username: userName
 										},
 										type: SIGNED_IN
@@ -900,7 +905,8 @@ export const OAuthWorker: OAuthWorkerSingletonInterface = (function (): OAuthWor
             allowedScopes: allowedScope,
             authorizationEndpoint: authorizeEndpoint,
             displayName: displayName,
-            email: email,
+			email: email,
+			oidcSessionIframe: check_session_iframe,
             username: userName
         };
 	};
