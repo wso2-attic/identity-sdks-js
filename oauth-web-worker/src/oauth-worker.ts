@@ -598,6 +598,7 @@ export const OAuthWorker: OAuthWorkerSingletonInterface = (function (): OAuthWor
 					return Promise.resolve({
 						data: {
 							allowedScopes: allowedScope,
+							authorizationEndpoint: authorizeEndpoint,
 							displayName: displayName,
 							email: email,
 							username: userName
@@ -863,6 +864,7 @@ export const OAuthWorker: OAuthWorkerSingletonInterface = (function (): OAuthWor
 									return Promise.resolve({
 										data: {
 											allowedScopes: allowedScope,
+											authorizationEndpoint: authorizeEndpoint,
 											displayName: displayName,
 											email: email,
 											username: userName
