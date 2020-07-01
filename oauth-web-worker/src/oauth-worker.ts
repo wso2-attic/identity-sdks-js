@@ -895,11 +895,12 @@ export const OAuthWorker: OAuthWorkerSingletonInterface = (function (): OAuthWor
 	 */
 	const getUserInfo = (): UserInfo => {
 		return {
-			allowedScopes: allowedScope,
-			displayName: displayName,
-			email: email,
-			username: userName
-		};
+            allowedScopes: allowedScope,
+            authorizationEndpoint: authorizeEndpoint,
+            displayName: displayName,
+            email: email,
+            username: userName
+        };
 	};
 
 	/**
