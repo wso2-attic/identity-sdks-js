@@ -18,6 +18,7 @@
 
 import { handleSignIn } from "./actions/sign-in";
 import { handleSignOut } from "./actions/sign-out";
+import { getAccessToken } from "./actions/session";
 import * as AUTHENTICATION_TYPES from "./constants";
 import { ConfigInterface } from "./models/client";
 
@@ -91,9 +92,14 @@ export class IdentityAuth {
         return;
     }
 
+    /**
+     * Get access token method.
+     *
+     * @returns {Promise<string>} promise.
+     * @memberof IdentityAuth
+     */
     public getAccessToken() {
-        // TODO: Implement
-        return;
+        return getAccessToken();
     }
 
     /**
