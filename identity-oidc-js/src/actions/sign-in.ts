@@ -263,6 +263,10 @@ export const sendRefreshTokenRequest = (
     body.push(`refresh_token=${refreshToken}`);
     body.push("grant_type=refresh_token");
 
+    if (requestParams.clientSecret && requestParams.clientSecret.trim().length > 0) {
+        body.push(`client_secret=${requestParams.clientSecret}`);
+    }
+
     return axios.post(tokenEndpoint, body.join("&"), getTokenRequestHeaders(requestParams.clientHost))
         .then((response) => {
             if (response.status !== 200) {
