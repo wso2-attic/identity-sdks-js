@@ -36,7 +36,7 @@ export const SERVICE_RESOURCES: ServiceResourcesType = {
 
 export const AUTHORIZATION_ENDPOINT = "authorization_endpoint";
 export const TOKEN_ENDPOINT = "token_endpoint";
-export const REVOKE_TOKEN_ENDPOINT = "revoke_token_endpoint";
+export const REVOKE_TOKEN_ENDPOINT = "revocation_endpoint";
 export const END_SESSION_ENDPOINT = "end_session_endpoint";
 export const JWKS_ENDPOINT = "jwks_uri";
 export const OP_CONFIG_INITIATED = "op_config_initiated";
